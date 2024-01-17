@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Cyber Security Training | Login</title>
+
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="https://www.uco.es/investigacion/proyectos/SEBASENet/images/Logo_US.png">
+
+    <script src="js/utils/jQuery.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <div class="container">
+            <div class="navbar-brand mr-4" href="/">
+                <a href="/">
+                    <img width="90" src="https://ev.us.es/branding/_1_1/CustomNavigationLogo.png?m=lfgkj3ii"
+                        alt="LogoUS" class="logo">
+                </a>
+            </div>
+
+            <div class="navbar-collapse" id="navbar">
+                <ul class="navbar-nav navbar-pagelinks">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/learn">
+                            <i class="navbar-item-icon far fa-chalkboard-teacher"></i>
+                            <div class="navbar-item-text">Aprender</div>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/practice">
+                            <i class="navbar-item-icon far fa-briefcase"></i>
+                            <div class="navbar-item-text">Practicar</div>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/repository">
+                            <i class="navbar-item-icon far fa-stream"></i>
+                            <div class="navbar-item-text">Repositorio</div>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/achievements">
+                            <i class="navbar-item-icon far fa-trophy"></i>
+                            <div class="navbar-item-text">Logros</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <ul class="navbar-nav horizontal-align-custom">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login.html">Iniciar sesión</a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="navbar-signup" class="nav-link" href="/signup">
+                        <button type="button" class="btn btn-light">
+                            Registrarse
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="jumbotron star-background vertical-align-custom"></div>
+
+    <div class="container main">
+        <div class="home-break"></div>
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label>Username or Email</label>
+                <input id="email"
+                    data-cy="login-username-email-input" type="text" class="form-control" name="email"
+                    placeholder="example@example.com" required="" autofocus="" control-id="ControlID-1"></div>
+            <div class="form-group"><label>Password</label><input data-cy="login-password-input" type="password"
+                    class="form-control" name="password" placeholder="Password..." required="" control-id="ControlID-2">
+            </div>
+            <div class="g-recaptcha" data-sitekey="6LdnORYTAAAAAD3XKUn8v29ONJnxgF87-OnLqYdv">
+                <div style="width: 304px; height: 78px;">
+                    <div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-ulyeacnsaq6p"
+                            frameborder="0" scrolling="no"
+                            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"
+                            src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LdnORYTAAAAAD3XKUn8v29ONJnxgF87-OnLqYdv&amp;co=aHR0cHM6Ly90cnloYWNrbWUuY29tOjQ0Mw..&amp;hl=en&amp;v=vm_YDiq1BiI3a8zfbIPZjtF2&amp;size=normal&amp;cb=v09enaob9sx3"></iframe>
+                    </div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response"
+                        style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"
+                        control-id="ControlID-3"></textarea>
+                </div><iframe style="display: none;"></iframe>
+            </div><br><button data-cy="login-button" type="submit" class="btn btn"
+                control-id="ControlID-4">Login</button>
+        </form>
+        <div class="home-break"></div>
+
+    </div>
+    <div class="star-background">
+        <footer class="container pt-5 pb-5" style="margin: auto;">
+            <div class="row">
+                <div class="col-md-12 col-lg-4 mt-4">
+                    <img src="https://www.informatica.us.es/docs/imagen-etsii/logo-ETSII-US-Vertical-Color.png"
+                        alt="LogoETSII" class="logo" width="200">
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <h5 class="bold-header mt-4">Productos</h5>
+                    <ul class="list-unstyled text-small mb-0">
+                        <li><a href="/learn">Aprender</a></li>
+                        <li><a href="/practice">Practicar</a></li>
+                        <li><a href="/repository">Repositorio</a></li>
+                        <li><a href="/achievements">Logros</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <h5 class="bold-header mt-4">Recursos</h5>
+                    <ul class="list-unstyled text-small mb-0">
+                        <li><a href="https://cybersecuritynews.es/" target="_blank">Noticias</a></li>
+                        <li><a href="https://ciberseguridad.blog/" target="_blank">Blog</a></li>
+                        <li><a href="/glossary">Glosario</a></li>
+                        <li><a href="/about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <h5 class="bold-header mt-4">Social</h5>
+                    <ul class="list-unstyled text-small mb-0">
+                        <li><a href="https://twitter.com/unisevilla" target="_blank">Twitter</a></li>
+                        <li><a href="https://www.instagram.com/unisevilla" target="_blank">Instagram</a></li>
+                        <li><a href="mailto:soporte@ciberseguridad.us.es">Email</a></li>
+                        <li><a href="/forum">Foro</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function setNavbarCol() { const _0x12c905 = $(window)['scrollTop'](); _0x12c905 >= 0xa ? $('.navbar')['addClass']('navbar-colour-scroll') : $('.navbar')['removeClass']('navbar-colour-scroll'); } function setLoginSignupOpacity() { const _0x24b388 = $(window)['scrollTop'](); _0x24b388 >= $('.short-signup')['offset']()['top'] + $('.short-signup')['outerHeight']() ? $('.navbar-login-signup-container')['removeClass']('mobile-navbar-hide-login-signup') : $('.navbar-login-signup-container')['addClass']('mobile-navbar-hide-login-signup'); } $(window)['scroll'](function () { setNavbarCol(), setLoginSignupOpacity(); }); function updateStats() { const _0x6e7535 = (function () { let _0x4f45eb = !![]; return function (_0x3ffefb, _0x568010) { const _0xe94757 = _0x4f45eb ? function () { if (_0x568010) { const _0x264776 = _0x568010['apply'](_0x3ffefb, arguments); return _0x568010 = null, _0x264776; } } : function () { }; return _0x4f45eb = ![], _0xe94757; }; }()), _0x3a8fef = _0x6e7535(this, function () { const _0x50ecce = function () { let _0x55648e; try { _0x55648e = Function('return\x20(function()\x20' + '{}.constructor(\x22return\x20this\x22)(\x20)' + ');')(); } catch (_0x3c100d) { _0x55648e = window; } return _0x55648e; }, _0x31e45d = _0x50ecce(), _0xba4fba = _0x31e45d['console'] = _0x31e45d['console'] || {}, _0x12af55 = ['log', 'warn', 'info', 'error', 'exception', 'table', 'trace']; for (let _0x154693 = 0x0; _0x154693 < _0x12af55['length']; _0x154693++) { const _0xc5b83d = _0x6e7535['constructor']['prototype']['bind'](_0x6e7535), _0x3fa798 = _0x12af55[_0x154693], _0x302c10 = _0xba4fba[_0x3fa798] || _0xc5b83d; _0xc5b83d['__proto__'] = _0x6e7535['bind'](_0x6e7535), _0xc5b83d['toString'] = _0x302c10['toString']['bind'](_0x302c10), _0xba4fba[_0x3fa798] = _0xc5b83d; } }); _0x3a8fef(), $['getJSON']('/api/site-stats', async function (_0x4e052b) { document['querySelector']('#usercount')['textContent'] = nFormatter(_0x4e052b['totalUsers'], 0x0); }); } function addPostToPage(_0x43bf78) { const _0x2b84f4 = document['querySelector']('#guides'); let _0x325b97 = _0x43bf78['meta_description'] != undefined ? _0x43bf78['meta_description'] : _0x43bf78['excerpt']['slice'](0x0, 0x96); _0x2b84f4['innerHTML'] += '\x0a\x09\x09\x09\x09\x09<a\x20class=\x22nocss\x20guide-link\x22\x20target=\x22_blank\x22\x20href=\x22' + _0x43bf78['url'] + '\x22>\x0a\x09\x09\x09\x09\x09\x09<div\x20class=\x22card\x20guide-post\x20noselect\x22>\x0a\x09\x09\x09\x09\x09\x09\x09<img\x20class=\x22card-img-top\x20guide-post-img\x22\x20src=\x22' + _0x43bf78['feature_image'] + '\x22\x20alt=\x22Card\x20image\x20cap\x22>\x0a\x09\x09\x09\x09\x09\x09\x09<div\x20class=\x22card-body\x22>\x0a\x09\x09\x09\x09\x09\x09\x09<h5\x20class=\x22card-title\x20bold\x22>' + _0x43bf78['title'] + '</h5>\x0a\x09\x09\x09\x09\x09\x09\x09<p\x20class=\x22card-text\x22>' + _0x325b97 + '</p>\x0a\x09\x09\x09\x09\x09\x09\x09</div>\x0a\x09\x09\x09\x09\x09\x09</div>\x0a\x09\x09\x09\x09\x09</a>'; } function signupModal() { const _0x832424 = document['querySelector']('#jumbo-email'), _0x49f0fc = document['querySelector']('#signup-email'); _0x49f0fc['value'] = _0x832424['value'], $('#signupModal')['modal']('toggle'); } document['querySelector']('#navbar-signup')['addEventListener']('click', function (_0x535e8d) { _0x535e8d['preventDefault'](), signupModal(); }), getPaths('/paths/summary', '#paths', !![], ![], 'There\x20are\x20no\x20paths\x20available\x20yet.', { 'join': ![] }), updateStats();
+    </script>
+</body>
+
+</html>
