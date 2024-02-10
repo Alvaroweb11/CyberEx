@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+html {
+  --logged-out-bg: #111b29; /* 111b29 091b35 18283e */
+}
+
+body {
+  font-family: 'Ubuntu', monospace;
+  background-color: #fafafa;
+  margin: 0;
+}
+
+.star-background footer {
+  color: white;
+}
+
+.star-background footer li a {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  opacity: 0.5;
+  text-decoration: none;
+}
+
+.text-lgray {
+  color: #676767;
+}
+
+.text-black {
+  color: #000;
+}
+
+.titleunderline {
+  display: inline-block;
+  width: 90px;
+  height: 4px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  background-color: rgb(47, 76, 116);
+}
+
+.size-18 {
+  font-size: 18px;
+}
+
+.horizontal-align-custom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vertical-align-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jumbotron {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  background: #161e2d; /* 1f2427 */
+  border-radius: 0rem;
+  color: white;
+  width: 100%;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.jumbotron-login {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  background: #161e2d; /* 1f2427 */
+  border-radius: 0rem;
+  color: white;
+  width: 100%;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.jumbotron {
+  min-height: 100%;
+  padding: 100px 0;
+}
+
+.jumbotron-login {
+  min-height: 100%;
+  padding: 79.7px 0;
+}
+
+.logo {
+  filter: brightness(0) invert(1);
+}
+
+.navbar {
+  padding: 15px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.colores {
+  background-color: rgba(17, 27, 41, 0);
+}
+
+.navbar a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.seccion {
+  padding: 50px;
+  margin-top: 50px;
+}
+
+.navbar-pagelinks > li {
+  margin: 0 10px 0 0;
+  text-align: center;
+}
+
+.navbar-item-icon {
+  display: block;
+  font-size: 22px;
+}
+
+.short-home-container {
+  z-index: 999;
+  padding-top: 20px;
+}
+
+.home-break {
+  margin: 45px 0;
+}
+
+.star-background {
+  position: relative;
+  overflow: hidden !important;
+  background-image: linear-gradient(rgba(17, 27, 41, 0.6), rgba(17, 27, 41, 0.6)), url('stars.svg');
+  background-color: var(--logged-out-bg);
+  background-position: 0 -320px;
+}
