@@ -1,25 +1,27 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/generateJWT');
+const { revalidateJWT } = require('../helpers/revalidateJWT');
 require('dotenv').config();
 const mysql = require('mysql');
 const util = require('util');
 
-const registerUser = async(req, res = response ) => {
+const registerUser = async (req, res = response) => {
 
-    const { user, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME});
+            database: process.env.DB_NAME
+        });
         const query = util.promisify(connection.query).bind(connection);
 
         const rows = await query('SELECT * FROM usuarios WHERE email = ?', [email]);
 
-        if ( rows.length > 0 ) {
+        if (rows.length > 0) {
             return res.status(400).json({
                 ok: false,
                 msg: 'El usuario ya existe'
@@ -28,22 +30,23 @@ const registerUser = async(req, res = response ) => {
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        const passwordHash = bcrypt.hashSync( password, salt );
+        const passwordHash = bcrypt.hashSync(password, salt);
 
-        const result = await query('INSERT INTO usuarios (username, email, password) VALUES (?, ?, ?)', [user, email, passwordHash]);
+        const result = await query('INSERT INTO usuarios (username, email, password) VALUES (?, ?, ?)', [username, email, passwordHash]);
 
         // Generar JWT
-        const token = await generateJWT( result.insertId, email );
-    
+        const token = await generateJWT(result.insertId, username);
+
         res.status(201).json({
             ok: true,
             uid: result.insertId,
-            name: email,
+            username: username,
+            email: email,
             token
         })
 
         connection.end();
-        
+
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -53,34 +56,34 @@ const registerUser = async(req, res = response ) => {
     }
 }
 
-const loginUser = async(req, res = response ) => {
+const loginUser = async (req, res = response) => {
 
     const { email, password } = req.body;
 
     try {
-        
+
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME});
+            database: process.env.DB_NAME
+        });
         const query = util.promisify(connection.query).bind(connection);
 
         const rows = await query('SELECT * FROM usuarios WHERE email = ?', [email]);
 
-        if ( rows.length === 0 ) {
+        if (rows.length === 0) {
             return res.status(400).json({
                 ok: false,
                 msg: 'El usuario no existe con ese email',
             });
         }
 
-        const usuario = rows[0];
+        const user = rows[0];
 
         // Confirmar los passwords
-        const validPassword = bcrypt.compareSync( password, usuario.password );
-        console.log('Contraseña válida:', validPassword);
-        if ( !validPassword ) {
+        const validPassword = bcrypt.compareSync(password, user.password);
+        if (!validPassword) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Password incorrecto'
@@ -88,12 +91,13 @@ const loginUser = async(req, res = response ) => {
         }
 
         // Generar JWT
-        const token = await generateJWT( usuario.id, usuario.name );
+        const token = await generateJWT(user.id, user.username);
 
-        res.json({
+        res.status(201).json({
             ok: true,
-            uid: usuario.id,
-            name: usuario.name,
+            uid: user.id,
+            username: user.username,
+            email: user.email,
             token
         })
 
@@ -109,22 +113,45 @@ const loginUser = async(req, res = response ) => {
 
 }
 
-const revalidateToken = async (req, res = response ) => {
+const revalidateToken = async (req, res = response) => {
 
-    const { uid, name } = req;
+    const { uid } = req.body;
 
-    // Generar JWT
-    const token = await generarJWT( uid, name );
+    try {
 
-    // Obtener información del usuario, y remover el password
-    const user = await Usuario.findById( uid );
-    
-    res.json({
-        ok: true,
-        token,
-        uid,
-        name: user.name,
-    })
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        // Obtener información del usuario, y remover el password
+        const rows = await query('SELECT * FROM usuarios WHERE id = ?', [uid]);
+        const user = rows[0];
+
+        // Generar JWT
+        const token = await generateJWT(user.id, user.username);
+
+        res.json({
+            ok: true,
+            uid: user.id,
+            username: user.username,
+            email: user.email,
+            token
+        })
+
+    } catch (error) {
+
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+
+    }
+
 }
 
 module.exports = {

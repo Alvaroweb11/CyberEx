@@ -1,13 +1,17 @@
+import { useSelector, useDispatch } from "react-redux";
 import { Header } from "../components/Header";
-import { useNavbar } from "../hooks/useNavbar"
+import { useNavbar } from "../hooks";
+import { logout } from "../store/slices/auth";
 
 export const Layout = ({ children }) => {
 
+  const { status, username } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const backgroundColor = useNavbar();
 
   return (
     <>
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top colores" style={{ backgroundColor }}>
+      <nav className="navbar navbar-expand-md navbar-dark fixed-top colores" style={{backgroundColor}}>
         <div className="container">
           <div className="navbar-brand mr-4" href="/">
             <a href="/">
@@ -26,17 +30,33 @@ export const Layout = ({ children }) => {
           </div>
 
           <ul className="navbar-nav horizontal-align-custom">
-            <li className="nav-item">
-              <a className="nav-link" href="/login">Iniciar sesión</a>
-            </li>
+            {
+              (status !== 'authenticated')
+                ? <>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/login">Iniciar sesión</a>
+                  </li>
 
-            <li className="nav-item">
-              <a id="navbar-signup" className="nav-link" href="/register">
-                <button type="button" className="btn btn-light">
-                  Registrarse
-                </button>
-              </a>
-            </li>
+                  <li className="nav-item">
+                    <a id="navbar-signup" className="nav-link" href="/register">
+                      <button className="btn btn-light">
+                        Registrarse
+                      </button>
+                    </a>
+                  </li>
+                </>
+                : <>
+                  <li className="nav-item">
+                    <button className="nav-link" onClick={() => dispatch(logout())}>
+                      Logout
+                    </button>
+                  </li>
+
+                  <li className="nav-item">
+                    <a className="user-btn btn btn-light" href="/profile" style={{color: 'black'}}>{username}</a>
+                  </li>
+                </>
+            }
           </ul>
         </div>
       </nav>

@@ -1,9 +1,12 @@
 import '../css/style.css';
-import { useState } from 'react';
+import { startLoginUser } from "../store/slices/auth"
 import { Layout } from "../layout/Layout"
 import { useForm } from '../hooks/useForm';
+import { useDispatch } from 'react-redux';
 
 export function LoginPage() {
+
+  const dispatch = useDispatch();
 
   const {onChange, email, password} = useForm({
     email: '',
@@ -12,7 +15,7 @@ export function LoginPage() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    
+    dispatch(startLoginUser({email, password}))
   }
 
   return (
@@ -27,7 +30,6 @@ export function LoginPage() {
             <input id="email"
               className="form-control"
               value={email}
-              placeholder="example@example.com"
               onChange={onChange}
               name="email"
             />
@@ -38,7 +40,6 @@ export function LoginPage() {
             <input id="password"
               className="form-control"
               value={password}
-              placeholder="Password"
               onChange={onChange}
               type="password"
               name="password"

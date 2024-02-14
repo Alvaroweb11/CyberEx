@@ -4,6 +4,26 @@ html {
   --logged-out-bg: #111b29; /* 111b29 091b35 18283e */
 }
 
+.user-btn {
+  background-color: #ffffff;
+  color: pink;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 500px;
+}
+
+.user-btn:hover {
+  /* Quiero que cuando pase el cursor se ponga un borde */
+  box-shadow: 0 0 0 3px #676767;
+}
+
 body {
   font-family: 'Ubuntu', monospace;
   background-color: #fafafa;
