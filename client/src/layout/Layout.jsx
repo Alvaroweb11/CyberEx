@@ -3,15 +3,16 @@ import { Header } from "../components/Header";
 import { useNavbar } from "../hooks";
 import { logout } from "../store/slices/auth";
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children, halfScreen }) => {
 
   const { status, username } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const backgroundColor = useNavbar();
+  const navbarStyle = halfScreen ? { justifyContent: 'center', width: '50%', backgroundColor } : {backgroundColor};
 
   return (
-    <>
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top colores" style={{backgroundColor}}>
+    <div className="main-container">
+      <nav className="navbar navbar-expand-md navbar-dark fixed-top colores" style={navbarStyle}>
         <div className="container">
           <div className="navbar-brand mr-4" href="/">
             <a href="/">
@@ -63,7 +64,7 @@ export const Layout = ({ children }) => {
       {
         children
       }
-      <div className="star-background">
+      <div className="star-background footer">
         <footer className="container pt-5 pb-5" style={{ margin: 'auto' }}>
           <div className="row">
             <div className="col-md-12 col-lg-4 mt-4">
@@ -100,6 +101,6 @@ export const Layout = ({ children }) => {
           </div>
         </footer>
       </div>
-    </>
+    </div>
   )
 }
