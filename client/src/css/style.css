@@ -209,6 +209,7 @@ body {
 
 .start-btn {
   float: right;
+  margin-left: 30px;
 }
 
 .card-questions {
@@ -228,4 +229,24 @@ body {
 
 .card-answer-submit button {
   width: 100%;
+}
+
+/* Esto aplica a todas las barras de desplazamiento */
+::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la barra de desplazamiento */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color de la barra de desplazamiento */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de la barra de desplazamiento al pasar el mouse */
 }
