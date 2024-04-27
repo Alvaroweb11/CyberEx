@@ -1,5 +1,6 @@
-import { getRegister, getLogin, getRenewToken } from "../../../utils";
+import { getRegister, getLogin, getRenewToken, getUpdateTasks, getPoints } from "../../../utils";
 import { checkingCredentials, login, logout } from "./authSlice";
+import { addPoints, updateTask } from "./tasksSlice";
 
 export const checkingAuthentication = () => {
   return async (dispatch) => {
@@ -38,5 +39,21 @@ export const startRenewingUser = ({ uid, token }) => {
     
     if (!result.ok) return dispatch(logout(result));
     dispatch(login(result));
+  }
+}
+
+export const updateTasks = (taskUpdates) => {
+  return async (dispatch) => {
+    const result = await getUpdateTasks(taskUpdates);
+    dispatch(updateTask(result));
+  }
+}
+
+export const getTasks = ({ uid }) => {
+  if (!uid) return () => {};
+
+  return async (dispatch) => {
+    const result = await getPoints({ uid });
+    dispatch(addPoints(result));
   }
 }

@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
 
-export const ExerciseCard = ({
-	exercise,
-	alt,
-	src,
-	gradientColor,
-}) => {
+export const ExerciseCard = ({ exercise, alt, src, gradientColor }) => {
 	return (
 		<Link
 			to={`/practice/${exercise.toLowerCase()}`}

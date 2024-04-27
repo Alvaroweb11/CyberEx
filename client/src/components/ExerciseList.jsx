@@ -1,27 +1,24 @@
-import { imgs, exercises } from '../data';
 import { ExerciseCard } from './ExerciseCard';
 
-const [
-	imgHash,
-	imgSteganography,
-] = imgs;
+import imgHash from '../assets/hash.png';
+import imgSteganography from '../assets/steganography.png';
 
 export const ExerciseList = () => {
 	return (
 		<div className='flex flex-row flex-wrap justify-center gap-4 mt-10'>
 			{/* Exercise Link Hash */}
 			<ExerciseCard
-				exercise={exercises.hash}
+				exercise='Hash'
 				src={imgHash}
-				alt={`Ejercicio ${exercises.hash}`}
+				alt={`Ejercicio de hash`}
 				gradientColor=' from-purple-500 to-pink-500'
 			/>
 			    
             {/* Exercise Link Steganography */}
             <ExerciseCard
-                exercise={exercises.steganography}
+                exercise='Steganography'
                 src={imgSteganography}
-                alt={`Ejercicio ${exercises.steganography}`}
+                alt={`Ejercicio de esteganografía`}
                 gradientColor=' from-blue-500 to-green-500'
             />
 		</div>

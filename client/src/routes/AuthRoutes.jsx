@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { HomePage, LearnPage, PracticePage, PracticePageHash } from "../pages";
+import { HomePage, LeaderboardPage, LearnPage, PracticePage, PracticePageHash, PracticePageSteganography } from "../pages";
 
 export const AuthRoutes = () => {
     return (
@@ -7,6 +7,8 @@ export const AuthRoutes = () => {
             <Route path="/learn" element={<LearnPage />} />
             <Route path="/practice" element={<PracticePage />} />
             <Route path="/practice/hash" element={<PracticePageHash />} />
+            <Route path="/practice/steganography" element={<PracticePageSteganography />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
 
             <Route path="/" element={<HomePage />} />
             <Route path="/*" element={<Navigate to={"/"} />} />

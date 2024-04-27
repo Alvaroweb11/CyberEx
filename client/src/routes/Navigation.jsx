@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { NonAuthRoutes, AuthRoutes } from "../routes";
 import { useCheckAuth } from "../hooks/useCheckAuth";
-import { startRenewingUser } from "../store/slices/auth";
+import { startRenewingUser, getTasks } from "../store/slices/auth";
 
 export function Navigation() {
   const status = useCheckAuth();
@@ -21,6 +21,7 @@ export function Navigation() {
   useEffect(() => {
     if (isAuthChecked) {
       dispatch(startRenewingUser({ uid, token }));
+      dispatch(getTasks({ uid }));
     }
   }, [isAuthChecked, token, uid, dispatch]);
 

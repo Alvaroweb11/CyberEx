@@ -26,7 +26,7 @@ export const Layout = ({ children, halfScreen }) => {
               <Header text="Aprender" icon="chalkboard-teacher" href="learn" />
               <Header text="Practicar" icon="briefcase" href="practice" />
               <Header text="Repositorio" icon="stream" href="repository" />
-              <Header text="Logros" icon="trophy" href="achievements" />
+              <Header text="Logros" icon="trophy" href="leaderboard" />
             </ul>
           </div>
 

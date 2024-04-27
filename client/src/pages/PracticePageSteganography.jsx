@@ -7,47 +7,47 @@ import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
 import { updateTasks } from "../store/slices/auth"
 
-export function PracticePageHash() {
+export function PracticePageSteganography() {
     const { uid } = useSelector(state => state.auth);
-    const { points, hashTask1, hashTask2, hashTask3 } = useSelector(state => state.tasks);
+    const { points, steganographyTask1 } = useSelector(state => state.tasks);
     const [point, setPoints] = useState(points);
 
     const [isOpen1, setIsOpen1] = useState(false);
-    const [isOpen2, setIsOpen2] = useState(false);
-    const [isOpen3, setIsOpen3] = useState(false);
+    // const [isOpen2, setIsOpen2] = useState(false);
+    // const [isOpen3, setIsOpen3] = useState(false);
 
-    const [isAnswer1Correct, setIsAnswer1Correct] = useState(hashTask1);
-
-    useEffect(() => {
-        setIsAnswer1Correct(hashTask1);
-    }, [hashTask1]);
-
-    const [isAnswer2Correct, setIsAnswer2Correct] = useState(hashTask2);
+    const [isAnswer1Correct, setIsAnswer1Correct] = useState(steganographyTask1);
 
     useEffect(() => {
-        setIsAnswer2Correct(hashTask2);
-    }, [hashTask2]);
+        setIsAnswer1Correct(steganographyTask1);
+    }, [steganographyTask1]);
 
-    const [isAnswer3Correct, setIsAnswer3Correct] = useState(hashTask3);
+    // const [isAnswer2Correct, setIsAnswer2Correct] = useState(hashTask2);
 
-    useEffect(() => {
-        setIsAnswer3Correct(hashTask3);
-    }, [hashTask3]);
+    // useEffect(() => {
+    //     setIsAnswer2Correct(hashTask2);
+    // }, [hashTask2]);
+
+    // const [isAnswer3Correct, setIsAnswer3Correct] = useState(hashTask3);
+
+    // useEffect(() => {
+    //     setIsAnswer3Correct(hashTask3);
+    // }, [hashTask3]);
 
     const { onChange, answer1, answer2, answer3 } = useForm({
         answer1: "",
-        answer2: "",
-        answer3: "",
+        // answer2: "",
+        // answer3: "",
     });
 
     const dispatch = useDispatch();
 
     const [pointsTask1, setPointsTask1] = useState(100);
-    const [pointsTask2, setPointsTask2] = useState(100);
-    const [pointsTask3, setPointsTask3] = useState(100);
+    // const [pointsTask2, setPointsTask2] = useState(100);
+    // const [pointsTask3, setPointsTask3] = useState(100);
     const [task1Started, setTask1Started] = useState(localStorage.getItem('task1Started') === 'true');
-    const [task2Started, setTask2Started] = useState(localStorage.getItem('task2Started') === 'true');
-    const [task3Started, setTask3Started] = useState(localStorage.getItem('task3Started') === 'true');
+    // const [task2Started, setTask2Started] = useState(localStorage.getItem('task2Started') === 'true');
+    // const [task3Started, setTask3Started] = useState(localStorage.getItem('task3Started') === 'true');
 
     useEffect(() => {
         let task1Timer1;
@@ -65,37 +65,37 @@ export function PracticePageHash() {
         };
     }, [task1Started, pointsTask1]);
 
-    useEffect(() => {
-        let task2Timer1;
-        let task2Timer2;
-        if (task2Started) {
-            task2Timer1 = setTimeout(() => {
-                task2Timer2 = setInterval(() => {
-                    setPointsTask2((pointsTask2) => pointsTask2 - 1);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
-        }
-        return () => {
-            clearTimeout(task2Timer1);
-            clearInterval(task2Timer2);
-        };
-    }, [task2Started, pointsTask2]);
+    // useEffect(() => {
+    //     let task2Timer1;
+    //     let task2Timer2;
+    //     if (task2Started) {
+    //         task2Timer1 = setTimeout(() => {
+    //             task2Timer2 = setInterval(() => {
+    //                 setPointsTask2((pointsTask2) => pointsTask2 - 1);
+    //             }, 60000); // 1 minute in milliseconds
+    //         }, 600000); // 10 minutes in milliseconds
+    //     }
+    //     return () => {
+    //         clearTimeout(task2Timer1);
+    //         clearInterval(task2Timer2);
+    //     };
+    // }, [task2Started, pointsTask2]);
 
-    useEffect(() => {
-        let task3Timer1;
-        let task3Timer2;
-        if (task3Started) {
-            task3Timer1 = setTimeout(() => {
-                task3Timer2 = setInterval(() => {
-                    setPointsTask3((pointsTask3) => pointsTask3 - 1);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
-        }
-        return () => {
-            clearTimeout(task3Timer1);
-            clearInterval(task3Timer2);
-        };
-    }, [task3Started, pointsTask3]);
+    // useEffect(() => {
+    //     let task3Timer1;
+    //     let task3Timer2;
+    //     if (task3Started) {
+    //         task3Timer1 = setTimeout(() => {
+    //             task3Timer2 = setInterval(() => {
+    //                 setPointsTask3((pointsTask3) => pointsTask3 - 1);
+    //             }, 60000); // 1 minute in milliseconds
+    //         }, 600000); // 10 minutes in milliseconds
+    //     }
+    //     return () => {
+    //         clearTimeout(task3Timer1);
+    //         clearInterval(task3Timer2);
+    //     };
+    // }, [task3Started, pointsTask3]);
 
     const [machineStarted, setMachineStarted] = useState(false);
 
@@ -169,7 +169,7 @@ export function PracticePageHash() {
                                             <i className={`far ${isAnswer1Correct ? 'fa-check-circle text-green' : 'fa-circle text-lgray'}`}></i>
                                         </span>
                                     </span>
-                                    <span className="exercise-text">Hash</span>
+                                    <span className="exercise-text">Steganography</span>
                                     <i className="fas fa-chevron-down float-right"></i>
                                 </div>
                             </div>
@@ -190,46 +190,12 @@ export function PracticePageHash() {
                                                 <i className="fas fa-play mr-2"></i> Start Machine
                                             </button>
 
-                                            <p style={{ textAlign: "justify", marginBottom: "10px" }}>
-                                                Una empresa de tecnología establece una política de contraseñas con los siguientes requisitos:
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                1. Deben tener como mínimo 8 caracteres.
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                2. Deben tener al menos un carácter de cada uno de los siguientes tres grupos:
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "100px" }}>
-                                                a. Letras (mayúsculas y minúsculas): A, B, C, … a, b, c …
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "100px" }}>
-                                                b. Caracteres numéricos: 0, 1, 2, 3,.., 8, 9
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "10px", marginLeft: "100px" }}>
-                                                c. Símbolos: ! @ # $ % & *^( ) - = { } [ ] \ : ; &lt; &gt; ? , . /
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "10px" }}>
-                                                La empresa sospecha que algunas de las contraseñas en su base de datos no cumplen con
-                                                estos requisitos. A continuación se muestran tres contraseñas cifradas con SHA-1 y sus
-                                                usuarios correspondientes:
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: alexsmith - Contraseña: b9dfbbb211b0301ba720b9db57dc2edaefd8aa74
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: sarah_jones - Contraseña: c938ab5fbf3d5e17a9cd57c33e2ee2fd90a733df
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "25px", marginLeft: "50px" }}>
-                                                Usuario: john_doe - Contraseña: 87b76d7d9e13c29f49d9c626eaaa66becc6fd5b2
+                                            <p style={{ textAlign: "justify", marginBottom: "25px" }}>
+                                                La dirección de un Hospital tiene sospechas de que un Jefe de Servicio está enviando
+                                                información confidencial de la misma a terceras personas ajenas a la entidad hospitalaria de
+                                                forma codificada utilizando quizás algún método relacionado con la esteganografía. Hemos
+                                                recibido una de las imágenes enviada (ver archivo adjunto “Dibujo.bmp”) sobre la que se cree
+                                                existe información confidencial oculta.
                                             </p>
                                         </div>
 
@@ -239,7 +205,7 @@ export function PracticePageHash() {
 
                                         <div className="card-answer">
                                             <p style={{ textAlign: "justify", marginTop: "10px", marginBottom: "10px" }}>
-                                                Determina qué contraseña no cumple con los requisitos de la empresa:
+                                                Determina el nombre del archivo oculto en la imagen:
                                             </p>
 
                                             <div className="card-answer-input row">
@@ -250,7 +216,7 @@ export function PracticePageHash() {
                                                         onChange={onChange}
                                                         type="text"
                                                         name="answer1"
-                                                        placeholder={`${isAnswer1Correct ? 'CyberEx' : 'Answer format: *******'}`}
+                                                        placeholder={`${isAnswer1Correct ? 'a5fde.jpg' : 'Answer format: *****.***'}`}
                                                         disabled={isAnswer1Correct}
                                                     />
                                                 </div>
@@ -261,11 +227,11 @@ export function PracticePageHash() {
                                                         className={`btn ${isAnswer1Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer1Correct}
                                                         onClick={() => {
-                                                            if (answer1 !== "CyberEx") {
+                                                            if (answer1 !== "a5fde.jpg") {
                                                                 return Swal.fire('Error', 'Respuesta incorrecta', 'error');
                                                             }
                                                             setIsAnswer1Correct(true);
-                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, hashTask1: 1 }))
+                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, steganographyTask1: 1 }))
                                                             setPoints(point => point + pointsTask1);
                                                             setMachineStarted(false);
                                                         }}>
@@ -279,7 +245,7 @@ export function PracticePageHash() {
                             </Collapse>
                         </div>
 
-                        <div className="card" id="task-2" style={{ marginBottom: "15px" }}>
+                        {/* <div className="card" id="task-2" style={{ marginBottom: "15px" }}>
                             <div className="card-header" role="button" onClick={() => setIsOpen2(!isOpen2)}>
                                 <div className="card-link">
                                     <span className="task-dropdown-title">
@@ -431,13 +397,6 @@ export function PracticePageHash() {
                                                 Mensaje: 531456 487654 200 - MAC: c5173b3e13fbed7f1b41c7dfa5fd6fd6368cd366
                                             </p>
 
-                                            {/* <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Mensaje: 541157 487655 200 - MAC: 158413dd62eada5273a72f9fa35f4e19ddb864b8 // $® S
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "25px", marginLeft: "50px" }}>
-                                                Mensaje: 541158 487656 200 - MAC: 0a5f910eddc60e3b06f51670e83d37886804bf9a // !®-A
-                                            </p> */}
                                         </div>
 
                                         <div className="card-questions vertical-align-custom text-lgray">
@@ -484,7 +443,7 @@ export function PracticePageHash() {
                                     </div>
                                 </div>
                             </Collapse>
-                        </div>
+                        </div> */}
 
                         <div className="home-break"></div>
                     </div>
