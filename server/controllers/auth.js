@@ -1,7 +1,6 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/generateJWT');
-const { revalidateJWT } = require('../helpers/revalidateJWT');
 require('dotenv').config();
 const mysql = require('mysql');
 const util = require('util');
@@ -54,6 +53,7 @@ const registerUser = async (req, res = response) => {
             uid: result.insertId,
             username: username,
             email: email,
+            role: result.role,
             token
         })
 
@@ -83,14 +83,14 @@ const loginUser = async (req, res = response) => {
         const query = util.promisify(connection.query).bind(connection);
 
         const rows = await query('SELECT * FROM usuarios WHERE email = ?', [email]);
-        
+
         if (rows.length === 0) {
             return res.status(400).json({
                 ok: false,
                 msg: 'El usuario no existe con ese email',
             });
         }
-        
+
         const user = rows[0];
 
         // Confirmar los passwords
@@ -110,6 +110,7 @@ const loginUser = async (req, res = response) => {
             uid: user.id,
             username: user.username,
             email: user.email,
+            role: user.role,
             token
         })
 
@@ -151,6 +152,7 @@ const revalidateToken = async (req, res = response) => {
             uid: user.id,
             username: user.username,
             email: user.email,
+            role: user.role,
             token
         })
 
@@ -167,9 +169,9 @@ const revalidateToken = async (req, res = response) => {
 }
 
 const updatePoints = async (req, res = response) => {
-    
+
     const { uid } = req.body;
-    
+
     try {
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
@@ -218,74 +220,90 @@ const updatePoints = async (req, res = response) => {
 }
 
 const getPoints = async (req, res = response) => {
-    
+
     const userId = req.body.uid;
 
     try {
-            
-            const connection = await mysql.createConnection({
-                host: process.env.DB_HOST,
-                user: process.env.DB_USER,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_NAME
-            });
-            const query = util.promisify(connection.query).bind(connection);
-    
-            const rows = await query('SELECT * FROM ejercicios WHERE idUser = ?', [userId]);
-    
-            const user = rows[0];
-    
-            res.status(201).json({
-                ok: true,
-                points: user.points,
-                hashTask1: user.hashTask1,
-                hashTask2: user.hashTask2,
-                hashTask3: user.hashTask3,
-                steganographyTask1: user.steganographyTask1,
-            })
-    
-            connection.end();
-    
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({
-                ok: false,
-                msg: 'Por favor hable con el administrador'
-            });
-        }
 
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        const rows = await query('SELECT * FROM ejercicios WHERE idUser = ?', [userId]);
+
+        const user = rows[0];
+
+        res.status(201).json({
+            ok: true,
+            points: user.points,
+            hashTask1: user.hashTask1,
+            hashTask2: user.hashTask2,
+            hashTask3: user.hashTask3,
+            steganographyTask1: user.steganographyTask1,
+        })
+
+        connection.end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
     }
+
+}
 
 const getRanking = async (req, res = response) => {
-        
-        try {
-            
-            const connection = await mysql.createConnection({
-                host: process.env.DB_HOST,
-                user: process.env.DB_USER,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_NAME
-            });
-            const query = util.promisify(connection.query).bind(connection);
-    
-            const rows = await query('SELECT usuarios.username, ejercicios.points FROM ejercicios JOIN usuarios ON ejercicios.idUser = usuarios.id ORDER BY ejercicios.points DESC LIMIT 10');
-    
-            res.status(201).json({
-                ok: true,
-                ranking: rows
-            })
-    
-            connection.end();
-    
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({
-                ok: false,
-                msg: 'Por favor hable con el administrador'
-            });
-        }
-    
+
+    try {
+
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        const rows = await query('SELECT usuarios.username, ejercicios.points FROM ejercicios JOIN usuarios ON ejercicios.idUser = usuarios.id ORDER BY ejercicios.points DESC LIMIT 10');
+
+        res.status(201).json({
+            ok: true,
+            ranking: rows
+        })
+
+        connection.end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
     }
+
+}
+
+async function getUserName(uid) {
+    const connection = await mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    });
+    const query = util.promisify(connection.query).bind(connection);
+
+    const rows = await query('SELECT username FROM usuarios WHERE id = ?', [uid]);
+
+    connection.end();
+
+    return rows[0] ? rows[0].username : 'Desconocido';
+}
 
 module.exports = {
     registerUser,
@@ -293,5 +311,6 @@ module.exports = {
     revalidateToken,
     updatePoints,
     getPoints,
-    getRanking
+    getRanking,
+    getUserName
 }

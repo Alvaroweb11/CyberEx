@@ -6,3 +6,6 @@ export * from "./PracticePage";
 export * from "./PracticePageHash";
 export * from "./PracticePageSteganography";
 export * from "./LeaderboardPage";
+export * from "./RepositoryPage";
+export * from "./MyRepositoryPage";
+export * from "./AdminRepositoryPage";

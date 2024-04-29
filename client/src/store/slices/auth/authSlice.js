@@ -5,8 +5,9 @@ export const authSlice = createSlice({
   initialState: {
     status: null,
     uid: null,
-    email: null,
     username: null,
+    email: null,
+    role: null,
     token: null,
     msg: null
   },
@@ -16,15 +17,17 @@ export const authSlice = createSlice({
       state.uid = payload.uid;
       state.username = payload.username;
       state.email = payload.email;
-      state.msg = null;
+      state.role = payload.role;
       state.token = payload.token;
+      state.msg = null;
       localStorage.setItem('user', JSON.stringify(state));
     },
     logout: (state, {payload}) => {
       state.status = "not-authenticated";
       state.uid = null;
-      state.email = null;
       state.username = null;
+      state.email = null;
+      state.role = null;
       state.token = null;
       state.msg = payload?.msg;
       localStorage.clear();

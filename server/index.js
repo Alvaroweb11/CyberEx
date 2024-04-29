@@ -4,6 +4,9 @@ const authRouter = require('./routes/auth');
 const { dbConnection } = require('./database/config');
 require('dotenv').config();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const fileupload = require('express-fileupload');
+const { uploadFiles, getFiles, getOwnFiles, deleteFiles, downloadFiles } = require('./upload/config');
 
 // Limpiar consola
 console.clear();
@@ -11,11 +14,22 @@ console.clear();
 // Crear el servidor de express
 const app = express();
 
+// CORS
+app.use(cors({ origin: true }))
+
 // Base de datos
 dbConnection();
 
-// CORS
-app.use(cors({ origin: true }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Carga de archivos
+app.use(fileupload({ createParentPath: true }));
+app.post('/uploadFiles', uploadFiles);
+app.get('/getFiles', getFiles);
+app.post('/getOwnFiles', getOwnFiles);
+app.post('/deleteFiles', deleteFiles);
+app.post('/downloadFiles', downloadFiles);
 
 // Directorio Público
 app.use( express.static('public') );

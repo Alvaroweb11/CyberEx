@@ -1,0 +1,64 @@
+.dropDownProfile {
+  position: absolute;
+  top: 4.5rem;
+  right: 1.5rem;
+  width: 130px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid gray;
+}
+
+.dropDownProfile::before {
+  content: '';
+  position: absolute;
+  top: -0.7rem;
+  right: 1.1rem;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  background-color: white;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+}
+
+.dropDownProfile ul li {
+  border-bottom: 1px solid lightgray;
+  padding: 5px 0;
+  font-size: 0.92rem;
+}
+
+.dropDownProfile ul li:last-child {
+  border-bottom: none;
+}
+
+.dropDownProfile ul li a {
+  color: inherit;
+  text-align: left;
+  padding: 0px 0;
+}
+
+.dropDownPopover {
+  position: absolute;
+  font-size: 0.92rem;
+  top: 2.5rem;
+  right: 0rem;
+  width: 189px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid gray;
+}
+
+.dropDownPopover::before {
+  content: '';
+  position: absolute;
+  top: -0.7rem;
+  right: 1.1rem;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  background-color: white;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+}

@@ -4,3 +4,7 @@ export * from "./getRenewToken";
 export * from "./getUpdateTasks";
 export * from "./getPoints";
 export * from "./getRanking";
+export * from "./getFiles";
+export * from "./getOwnFiles";
+export * from "./deleteFiles";
+export * from "./downloadFiles";

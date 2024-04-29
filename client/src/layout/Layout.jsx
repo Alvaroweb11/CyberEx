@@ -1,14 +1,34 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import { Header } from "../components/Header";
 import { useNavbar } from "../hooks";
 import { logout } from "../store/slices/auth";
 
+import "../css/dropDownProfile.css";
+
 export const Layout = ({ children, halfScreen }) => {
 
-  const { status, username } = useSelector(state => state.auth);
+  const { status, username, role } = useSelector(state => state.auth);
+  const { points } = useSelector(state => state.tasks);
   const dispatch = useDispatch();
   const backgroundColor = useNavbar();
-  const navbarStyle = halfScreen ? { justifyContent: 'center', width: '50%', backgroundColor } : {backgroundColor};
+  const navbarStyle = halfScreen ? { justifyContent: 'center', width: '50%', backgroundColor } : { backgroundColor };
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+
+  useEffect(() => {
+    const closeMenu = (e) => {
+      if (!e.target.closest('.dropDown')) {
+        setOpenProfile(false);
+      }
+    };
+
+    document.addEventListener('click', closeMenu);
+
+    return () => {
+      document.removeEventListener('click', closeMenu);
+    };
+  }, []);
 
   return (
     <div className="main-container">
@@ -47,14 +67,39 @@ export const Layout = ({ children, halfScreen }) => {
                   </li>
                 </>
                 : <>
-                  <li className="nav-item">
-                    <button className="nav-link" onClick={() => dispatch(logout())}>
-                      Logout
-                    </button>
+                  <li
+                    className="nav-item"
+                    style={{ position: 'relative', marginRight: '2rem' }}
+                    onMouseEnter={() => setPopoverVisible(true)}
+                    onMouseLeave={() => setPopoverVisible(false)}
+                  >
+                    <p className="text-white">{points} CP</p>
+                    {isPopoverVisible && (
+                      <div className="dropDownPopover">
+                        ¡Resuelve desafíos para ganar CyberPoints!
+                      </div>
+                    )}
                   </li>
 
-                  <li className="nav-item">
-                    <a className="user-btn btn btn-light" href="/profile" style={{color: 'black'}}>{username}</a>
+                  <li className="nav-item dropDown" style={{ position: 'relative' }}>
+                    <a className="user-btn btn btn-light"
+                      style={{ color: 'black' }}
+                      onClick={() => setOpenProfile(!openProfile)}
+                    >
+                      {username}
+                    </a>
+                    {openProfile &&
+                      <div className="flex flex-col dropDownProfile">
+                        <ul className="flex flex-col gap-2">
+                          <li><a href="/profile">Perfil</a></li>
+                          <li><a href="/myrepository">Mi Repositorio</a></li>
+                          <li><a href="/settings">Opciones</a></li>
+                          {role === 'admin' &&
+                            <li><a href="/admin">Admin</a></li>
+                          }
+                          <li role="button" onClick={() => dispatch(logout())}>Logout</li>
+                        </ul>
+                      </div>}
                   </li>
                 </>
             }
