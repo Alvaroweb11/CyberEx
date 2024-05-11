@@ -5,30 +5,37 @@ import Collapse from 'react-bootstrap/Collapse';
 import { useForm } from "../hooks/useForm"
 import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
-import { updateTasks } from "../store/slices/auth"
+import { updateTasks, updateTraceability } from "../store/slices/auth"
 
 export function PracticePageHash() {
     const { uid } = useSelector(state => state.auth);
     const { points, hashTask1, hashTask2, hashTask3 } = useSelector(state => state.tasks);
     const [point, setPoints] = useState(points);
 
+    useEffect(() => {
+        setPoints(points);
+    }, [points]);
+
     const [isOpen1, setIsOpen1] = useState(false);
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen3, setIsOpen3] = useState(false);
 
     const [isAnswer1Correct, setIsAnswer1Correct] = useState(hashTask1);
+    const [isAnswer1Hinted, setIsAnswer1Hinted] = useState(false);
 
     useEffect(() => {
         setIsAnswer1Correct(hashTask1);
     }, [hashTask1]);
 
     const [isAnswer2Correct, setIsAnswer2Correct] = useState(hashTask2);
+    const [isAnswer2Hinted, setIsAnswer2Hinted] = useState(false);
 
     useEffect(() => {
         setIsAnswer2Correct(hashTask2);
     }, [hashTask2]);
 
     const [isAnswer3Correct, setIsAnswer3Correct] = useState(hashTask3);
+    const [isAnswer3Hinted, setIsAnswer3Hinted] = useState(false);
 
     useEffect(() => {
         setIsAnswer3Correct(hashTask3);
@@ -55,7 +62,7 @@ export function PracticePageHash() {
         if (task1Started) {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
-                    setPointsTask1((pointsTask1) => pointsTask1 - 1);
+                    setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
                 }, 60000); // 1 minute in milliseconds
             }, 600000); // 10 minutes in milliseconds
         }
@@ -71,7 +78,7 @@ export function PracticePageHash() {
         if (task2Started) {
             task2Timer1 = setTimeout(() => {
                 task2Timer2 = setInterval(() => {
-                    setPointsTask2((pointsTask2) => pointsTask2 - 1);
+                    setPointsTask2((pointsTask2) => pointsTask2 > 0 ? pointsTask2 - 1 : 0);
                 }, 60000); // 1 minute in milliseconds
             }, 600000); // 10 minutes in milliseconds
         }
@@ -87,7 +94,7 @@ export function PracticePageHash() {
         if (task3Started) {
             task3Timer1 = setTimeout(() => {
                 task3Timer2 = setInterval(() => {
-                    setPointsTask3((pointsTask3) => pointsTask3 - 1);
+                    setPointsTask3((pointsTask3) => pointsTask3 > 0 ? pointsTask3 - 1 : 0);
                 }, 60000); // 1 minute in milliseconds
             }, 600000); // 10 minutes in milliseconds
         }
@@ -216,21 +223,33 @@ export function PracticePageHash() {
 
                                             <p style={{ textAlign: "justify", marginBottom: "10px" }}>
                                                 La empresa sospecha que algunas de las contraseñas en su base de datos no cumplen con
-                                                estos requisitos. A continuación se muestran tres contraseñas cifradas con SHA-1 y sus
-                                                usuarios correspondientes:
+                                                estos requisitos. A continuación se muestran tres contraseñas cifradas y sus usuarios correspondientes:
                                             </p>
 
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: alexsmith - Contraseña: b9dfbbb211b0301ba720b9db57dc2edaefd8aa74
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: sarah_jones - Contraseña: c938ab5fbf3d5e17a9cd57c33e2ee2fd90a733df
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "25px", marginLeft: "50px" }}>
-                                                Usuario: john_doe - Contraseña: 87b76d7d9e13c29f49d9c626eaaa66becc6fd5b2
-                                            </p>
+                                            <div className="tabla-ejercicios-container">
+                                                <table className="tabla-ejercicios">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Usuario</th>
+                                                            <th>Contraseña</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>alexsmith</td>
+                                                            <td>b9dfbbb211b0301ba720b9db57dc2edaefd8aa74</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>sarah_jones</td>
+                                                            <td>c938ab5fbf3d5e17a9cd57c33e2ee2fd90a733df</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>john_doe</td>
+                                                            <td>87b76d7d9e13c29f49d9c626eaaa66becc6fd5b2</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
                                         <div className="card-questions vertical-align-custom text-lgray">
@@ -243,7 +262,7 @@ export function PracticePageHash() {
                                             </p>
 
                                             <div className="card-answer-input row">
-                                                <div className="card-answer-text col-sm-9">
+                                                <div className="card-answer-text col-sm-8">
                                                     <input
                                                         className="form-control"
                                                         value={answer1}
@@ -255,18 +274,59 @@ export function PracticePageHash() {
                                                     />
                                                 </div>
 
-                                                <div className="card-answer-submit col-sm-3">
+                                                <div className="card-answer-submit col-sm-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`btn ${isAnswer1Hinted ? 'btn-info' : 'btn-outline-info'}`}
+                                                        disabled={isAnswer1Correct}
+                                                        onClick={() => {
+                                                            if (isAnswer1Hinted) {
+                                                                return Swal.fire({
+                                                                    icon: 'info',
+                                                                    title: 'Pista',
+                                                                    text: 'Utiliza hashcut con SHA-1 para obtener la contraseña'
+                                                                })
+                                                            }
+                                                            if (pointsTask1 < 20) {
+                                                                setPointsTask1(0);
+                                                            } else {
+                                                                setPointsTask1((pointsTask1) => pointsTask1 - 20);
+                                                            }
+                                                            Swal.fire({
+                                                                icon: 'info',
+                                                                title: 'Pista',
+                                                                text: 'Utiliza hashcut con SHA-1 para obtener la contraseña'
+                                                            })
+                                                            setIsAnswer1Hinted(true);
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-lightbulb"></i> Hint
+                                                    </button>
+                                                </div>
+
+                                                <div className="card-answer-submit col-sm-2">
                                                     <button
                                                         type="button"
                                                         className={`btn ${isAnswer1Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer1Correct}
                                                         onClick={() => {
                                                             if (answer1 !== "CyberEx") {
-                                                                return Swal.fire('Error', 'Respuesta incorrecta', 'error');
+                                                                return Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Respuesta incorrecta'
+                                                                })
                                                             }
                                                             setIsAnswer1Correct(true);
                                                             dispatch(updateTasks({ uid, points: point + pointsTask1, hashTask1: 1 }))
+                                                            dispatch(updateTraceability({ uid, hashTask1: pointsTask1 }))
                                                             setPoints(point => point + pointsTask1);
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: '¡Tarea completada!',
+                                                                text: `Has ganado ${pointsTask1} puntos`,
+                                                                showConfirmButton: false,
+                                                                timer: 2500
+                                                            })
                                                             setMachineStarted(false);
                                                         }}>
                                                         {isAnswer1Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}
@@ -312,32 +372,47 @@ export function PracticePageHash() {
                                             <p style={{ textAlign: "justify", marginBottom: "10px" }}>
                                                 Para mejorar la seguridad de las contraseñas almacenadas en la base de datos, la empresa decide
                                                 utilizar un mecanismo de hashing con salt. Cada contraseña se hashea junto con un valor único de
-                                                salt antes de ser almacenada. El hash resultante se calcula mediante el algoritmo SHA-1.
+                                                salt antes de ser almacenada.
                                             </p>
 
                                             <p style={{ textAlign: "justify", marginBottom: "10px" }}>
                                                 La empresa sigue sospechando que algunas de las contraseñas en su base de datos no cumplen con
-                                                estos requisitos. A continuación se muestran las contraseñas hasheadas con salt y sus usuarios
-                                                correspondientes:
+                                                estos requisitos. A continuación se muestran las contraseñas cifradas junto a su salt, sus usuarios
+                                                correspondientes y un comentario del usuario:
                                             </p>
 
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: alexsmith - Contraseña: +YVn8kryS74e8e/FjP5FZvrvwOa3Invj7K9sV5U+iZ0=
-                                                - Salt: 11 - Comentario del usuario: "Mi constraseña usa dos números, dos letras mayusculas, dos
-                                                números y dos minusculas"
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Usuario: sarah_jones - Contraseña: PUzvoJ3EYBLJmLDtYRqWM0OWXaFS2NZLGASR3E1WG0A=
-                                                - Salt: 45 - Comentario del usuario: "Mi contraseña es de las contraseñas más comunes que se ponen
-                                                seguida de un punto y dos números"
-                                            </p>
-
-                                            <p style={{ textAlign: "justify", marginBottom: "25px", marginLeft: "50px" }}>
-                                                Usuario: john_doe - Contraseña: ao/ry1TutMGkmJLjTSHD/KSjMN91M/D/QgrT35XbCSE=
-                                                - Salt: 83 - Comentario del usuario: "Mi contraseña es la fecha de nacimiento de uno de mis hijos
-                                                escribiendo el mes con letras"
-                                            </p>
+                                            <div className="tabla-ejercicios-container">
+                                                <table className="tabla-ejercicios">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Usuario</th>
+                                                            <th>Contraseña</th>
+                                                            <th>Salt</th>
+                                                            <th>Comentario del usuario</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>alexsmith</td>
+                                                            <td>+YVn8kryS74e8e/FjP5FZvrvwOa3Invj7K9sV5U+iZ0=</td>
+                                                            <td>11</td>
+                                                            <td>"Mi contraseña usa dos números, dos letras mayusculas, dos números y dos minusculas"</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>sarah_jones</td>
+                                                            <td>PUzvoJ3EYBLJmLDtYRqWM0OWXaFS2NZLGASR3E1WG0A=</td>
+                                                            <td>45</td>
+                                                            <td>"Mi contraseña es de las contraseñas más comunes que se ponen seguida de un punto y dos números"</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>john_doe</td>
+                                                            <td>ao/ry1TutMGkmJLjTSHD/KSjMN91M/D/QgrT35XbCSE=</td>
+                                                            <td>83</td>
+                                                            <td>"Mi contraseña es la fecha de nacimiento de uno de mis hijos escribiendo el mes con letras"</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
                                         <div className="card-questions vertical-align-custom text-lgray">
@@ -350,7 +425,7 @@ export function PracticePageHash() {
                                             </p>
 
                                             <div className="card-answer-input row">
-                                                <div className="card-answer-text col-sm-9">
+                                                <div className="card-answer-text col-sm-8">
                                                     <input
                                                         className="form-control"
                                                         value={answer2}
@@ -362,18 +437,59 @@ export function PracticePageHash() {
                                                     />
                                                 </div>
 
-                                                <div className="card-answer-submit col-sm-3">
+                                                <div className="card-answer-submit col-sm-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`btn ${isAnswer2Hinted ? 'btn-info' : 'btn-outline-info'}`}
+                                                        disabled={isAnswer2Correct}
+                                                        onClick={() => {
+                                                            if (isAnswer2Hinted) {
+                                                                return Swal.fire({
+                                                                    icon: 'info',
+                                                                    title: 'Pista',
+                                                                    text: 'Pasa a hexadecimal y usa hashcat con SHA-256'
+                                                                })
+                                                            }
+                                                            if (pointsTask2 < 20) {
+                                                                setPointsTask2(0);
+                                                            } else {
+                                                                setPointsTask2((pointsTask2) => pointsTask2 - 20);
+                                                            }
+                                                            Swal.fire({
+                                                                icon: 'info',
+                                                                title: 'Pista',
+                                                                text: 'Pasa a hexadecimal y usa hashcat con SHA-256'
+                                                            })
+                                                            setIsAnswer2Hinted(true);
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-lightbulb"></i> Hint
+                                                    </button>
+                                                </div>
+
+                                                <div className="card-answer-submit col-sm-2">
                                                     <button
                                                         type="button"
                                                         className={`btn ${isAnswer2Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer2Correct}
                                                         onClick={() => {
                                                             if (answer2 !== "password.52") {
-                                                                return Swal.fire('Error', 'Respuesta incorrecta', 'error');
+                                                                return Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Respuesta incorrecta'
+                                                                })
                                                             }
                                                             setIsAnswer2Correct(true);
                                                             dispatch(updateTasks({ uid, points: point + pointsTask2, hashTask2: 1 }))
+                                                            dispatch(updateTraceability({ uid, hashTask2: pointsTask2 }))
                                                             setPoints(point => point + pointsTask2);
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: '¡Tarea completada!',
+                                                                text: `Has ganado ${pointsTask2} puntos`,
+                                                                showConfirmButton: false,
+                                                                timer: 2500
+                                                            })
                                                             setMachineStarted(false);
                                                         }}>
                                                         {isAnswer2Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}
@@ -417,19 +533,32 @@ export function PracticePageHash() {
                                             </button>
 
                                             <p style={{ textAlign: "justify", marginBottom: "10px" }}>
-                                                La empresa de comercio electrónico utiliza códigos de autenticación de mensajes (MAC) para mantener 
-                                                la integridad de las transmisiones entre sus servidores y clientes. Los MAC se generan con claves 
+                                                La empresa de comercio electrónico utiliza códigos de autenticación de mensajes (MAC) para mantener
+                                                la integridad de las transmisiones entre sus servidores y clientes. Los MAC se generan con claves
                                                 secretas de 32 bits, entregadas anualmente a los clientes en dispositivos físicos.
                                             </p>
 
                                             <p style={{ textAlign: "justify", marginBottom: "10px" }}>
-                                                Se solicita evaluar la seguridad del tamaño de clave utilizado. Para ello, se proporcionan tres 
+                                                Se solicita evaluar la seguridad del tamaño de clave utilizado. Para ello, se proporcionan tres
                                                 pares de mensajes y sus correspondientes MAC, generados con diferentes claves:
                                             </p>
 
-                                            <p style={{ textAlign: "justify", marginLeft: "50px" }}>
-                                                Mensaje: 531456 487654 200 - MAC: c5173b3e13fbed7f1b41c7dfa5fd6fd6368cd366
-                                            </p>
+                                            <div className="tabla-ejercicios-container">
+                                                <table className="tabla-ejercicios">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Mensaje</th>
+                                                            <th>MAC</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>531456 487654 200</td>
+                                                            <td>c5173b3e13fbed7f1b41c7dfa5fd6fd6368cd366</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
                                             {/* <p style={{ textAlign: "justify", marginLeft: "50px" }}>
                                                 Mensaje: 541157 487655 200 - MAC: 158413dd62eada5273a72f9fa35f4e19ddb864b8 // $® S
@@ -450,7 +579,7 @@ export function PracticePageHash() {
                                             </p>
 
                                             <div className="card-answer-input row">
-                                                <div className="card-answer-text col-sm-9">
+                                                <div className="card-answer-text col-sm-8">
                                                     <input
                                                         className="form-control"
                                                         value={answer3}
@@ -462,18 +591,61 @@ export function PracticePageHash() {
                                                     />
                                                 </div>
 
-                                                <div className="card-answer-submit col-sm-3">
+                                                <div className="card-answer-submit col-sm-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`btn ${isAnswer3Hinted ? 'btn-info' : 'btn-outline-info'}`}
+                                                        disabled={isAnswer3Correct}
+                                                        onClick={() => {
+                                                            if (isAnswer3Hinted) {
+                                                                return Swal.fire({
+                                                                    icon: 'info',
+                                                                    title: 'Pista',
+                                                                    text: 'Utiliza hashcat con HMAC SHA-1'
+                                                                })
+                                                            }
+                                                            if (pointsTask3 < 20) {
+                                                                setPointsTask3(0);
+                                                            } else {
+                                                                setPointsTask3((pointsTask3) => pointsTask3 - 20);
+                                                            }
+                                                            Swal.fire({
+                                                                icon: 'info',
+                                                                title: 'Pista',
+                                                                text: 'Utiliza hashcat con HMAC SHA-1'
+                                                            })
+                                                            setIsAnswer3Hinted(true);
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-lightbulb"></i> Hint
+                                                    </button>
+                                                </div>
+
+                                                <div className="card-answer-submit col-sm-2">
                                                     <button
                                                         type="button"
                                                         className={`btn ${isAnswer3Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer3Correct}
                                                         onClick={() => {
                                                             if (answer3 !== " a6A") {
-                                                                return Swal.fire('Error', 'Respuesta incorrecta', 'error');
+                                                                return Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Respuesta incorrecta'
+                                                                })
                                                             }
                                                             setIsAnswer3Correct(true);
+                                                            console.log('point', point);
+                                                            console.log('pointsTask3', pointsTask3);
                                                             dispatch(updateTasks({ uid, points: point + pointsTask3, hashTask3: 1 }))
+                                                            dispatch(updateTraceability({ uid, hashTask3: pointsTask3 }))
                                                             setPoints(point => point + pointsTask3);
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: '¡Tarea completada!',
+                                                                text: `Has ganado ${pointsTask3} puntos`,
+                                                                showConfirmButton: false,
+                                                                timer: 2500
+                                                            })
                                                             setMachineStarted(false);
                                                         }}>
                                                         {isAnswer3Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}

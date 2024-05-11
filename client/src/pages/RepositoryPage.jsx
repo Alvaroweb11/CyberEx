@@ -115,7 +115,7 @@ export function RepositoryPage() {
                         </tbody>
                     </table>
                     <div className="pagination-container">
-                        <span>Mostrando página {currentPage} de {Math.ceil(filteredFiles.length / filesPerPage)}</span>
+                    <span>Mostrando página {currentPage} de {filteredFiles.length === 0 ? 1 : Math.ceil(filteredFiles.length / filesPerPage)}</span>
                         <div>
                             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                 Anterior

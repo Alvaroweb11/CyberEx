@@ -618,3 +618,24 @@ body {
   background: #ccc;
   cursor: not-allowed;
 }
+
+.tabla-ejercicios-container {
+  text-align: center;
+}
+
+.tabla-ejercicios {
+  display: inline-table;
+  text-align: left;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+.tabla-ejercicios th,
+.tabla-ejercicios td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-ejercicios thead tr {
+  background-color: #f2f2f2;
+}

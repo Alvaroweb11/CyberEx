@@ -5,18 +5,23 @@ import Collapse from 'react-bootstrap/Collapse';
 import { useForm } from "../hooks/useForm"
 import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
-import { updateTasks } from "../store/slices/auth"
+import { updateTasks, updateTraceability } from "../store/slices/auth"
 
 export function PracticePageSteganography() {
     const { uid } = useSelector(state => state.auth);
     const { points, steganographyTask1 } = useSelector(state => state.tasks);
     const [point, setPoints] = useState(points);
 
+    useEffect(() => {
+        setPoints(points);
+    }, [points]);
+
     const [isOpen1, setIsOpen1] = useState(false);
     // const [isOpen2, setIsOpen2] = useState(false);
     // const [isOpen3, setIsOpen3] = useState(false);
 
     const [isAnswer1Correct, setIsAnswer1Correct] = useState(steganographyTask1);
+    const [isAnswer1Hinted, setIsAnswer1Hinted] = useState(false);
 
     useEffect(() => {
         setIsAnswer1Correct(steganographyTask1);
@@ -55,7 +60,7 @@ export function PracticePageSteganography() {
         if (task1Started) {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
-                    setPointsTask1((pointsTask1) => pointsTask1 - 1);
+                    setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
                 }, 60000); // 1 minute in milliseconds
             }, 600000); // 10 minutes in milliseconds
         }
@@ -209,7 +214,7 @@ export function PracticePageSteganography() {
                                             </p>
 
                                             <div className="card-answer-input row">
-                                                <div className="card-answer-text col-sm-9">
+                                                <div className="card-answer-text col-sm-8">
                                                     <input
                                                         className="form-control"
                                                         value={answer1}
@@ -221,18 +226,59 @@ export function PracticePageSteganography() {
                                                     />
                                                 </div>
 
-                                                <div className="card-answer-submit col-sm-3">
+                                                <div className="card-answer-submit col-sm-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`btn ${isAnswer1Hinted ? 'btn-info' : 'btn-outline-info'}`}
+                                                        disabled={isAnswer1Correct}
+                                                        onClick={() => {
+                                                            if (isAnswer1Hinted) {
+                                                                return Swal.fire({
+                                                                    icon: 'info',
+                                                                    title: 'Pista',
+                                                                    text: 'La extensión del archivo obtenido puede ser la de un archivo comprimido'
+                                                                })
+                                                            }
+                                                            if (pointsTask1 < 20) {
+                                                                setPointsTask1(0);
+                                                            } else {
+                                                                setPointsTask1((pointsTask1) => pointsTask1 - 20);
+                                                            }
+                                                            Swal.fire({
+                                                                icon: 'info',
+                                                                title: 'Pista',
+                                                                text: 'La extensión del archivo obtenido puede ser la de un archivo comprimido'
+                                                            })
+                                                            setIsAnswer1Hinted(true);
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-lightbulb"></i> Hint
+                                                    </button>
+                                                </div>
+
+                                                <div className="card-answer-submit col-sm-2">
                                                     <button
                                                         type="button"
                                                         className={`btn ${isAnswer1Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer1Correct}
                                                         onClick={() => {
                                                             if (answer1 !== "a5fde.jpg") {
-                                                                return Swal.fire('Error', 'Respuesta incorrecta', 'error');
+                                                                return Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Respuesta incorrecta'
+                                                                })
                                                             }
                                                             setIsAnswer1Correct(true);
                                                             dispatch(updateTasks({ uid, points: point + pointsTask1, steganographyTask1: 1 }))
+                                                            dispatch(updateTraceability({ uid, steganographyTask1: pointsTask1 }))
                                                             setPoints(point => point + pointsTask1);
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: '¡Tarea completada!',
+                                                                text: `Has ganado ${pointsTask1} puntos`,
+                                                                showConfirmButton: false,
+                                                                timer: 2500
+                                                            })
                                                             setMachineStarted(false);
                                                         }}>
                                                         {isAnswer1Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}

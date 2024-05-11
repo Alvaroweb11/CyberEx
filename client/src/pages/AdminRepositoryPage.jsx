@@ -1,11 +1,9 @@
 import '../css/style.css';
 import { Layout } from "../layout/Layout";
 import { useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
-import { getFiles } from '../utils';
+import { getAdminFiles, approveAdminFiles, deleteAdminFiles, downloadAdminFiles } from '../utils';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { downloadFiles } from '../utils';
 
 export function AdminRepositoryPage() {
     const [files, setFiles] = useState([]);
@@ -13,11 +11,13 @@ export function AdminRepositoryPage() {
     const [filesPerPage, setFilesPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedDifficulty, setSelectedDifficulty] = useState("");
 
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const data = await getFiles();
+                const data = await getAdminFiles();
                 setFiles(data.files);
             } catch (error) {
                 console.error(error);
@@ -27,14 +27,38 @@ export function AdminRepositoryPage() {
         fetchFiles();
     }, []);
 
-    async function downloadFile(uid, fileName) {
+    async function downloadAdminFile(username, fileName) {
         try {
-            const blob = await downloadFiles({ uid, fileName });
+            const blob = await downloadAdminFiles({ username, fileName });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = fileName;
             a.click();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function approveAdminFile(username, fileName, selectedCategory, selectedDifficulty) {
+        try {
+            await approveAdminFiles({ username, fileName, selectedCategory, selectedDifficulty });
+
+            // Volver a buscar los archivos del servidor después de la eliminación
+            const data = await getAdminFiles();
+            setFiles(data.files);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function deleteAdminFile(username, fileName) {
+        try {
+            await deleteAdminFiles({ username, fileName });
+
+            // Volver a buscar los archivos del servidor después de la eliminación
+            const data = await getAdminFiles();
+            setFiles(data.files);
         } catch (error) {
             console.error(error);
         }
@@ -95,6 +119,7 @@ export function AdminRepositoryPage() {
                             <tr>
                                 <th>Nombre del fichero</th>
                                 <th>Categoría</th>
+                                <th>Dificultad</th>
                                 <th>Usuario</th>
                                 <th>Tamaño</th>
                                 <th>Fecha de subida</th>
@@ -105,17 +130,32 @@ export function AdminRepositoryPage() {
                                 .slice((currentPage - 1) * filesPerPage, currentPage * filesPerPage)
                                 .map((file, index) => (
                                     <tr key={index}>
-                                        <td><button onClick={() => { downloadFile(file.name) }}>{file.name}</button></td>
-                                        <td>{file.category}</td>
+                                        <td><button onClick={() => { downloadAdminFile(file.user, file.name) }}>{file.name}</button></td>
+                                        <td>
+                                            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                                <option value="hash">Hash</option>
+                                                <option value="steganography">Steganography</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)}>
+                                                <option value="facil">Fácil</option>
+                                                <option value="medio">Medio</option>
+                                                <option value="dificil">Difícil</option>
+                                            </select>
+                                        </td>
                                         <td>{file.user}</td>
                                         <td>{formatFileSize(file.size)}</td>
                                         <td>{formatDate(file.date)}</td>
+                                        <td><button onClick={() => { approveAdminFile(file.user, file.name, selectedCategory, selectedDifficulty) }}>&#10004;</button></td>
+                                        <td><button onClick={() => { deleteAdminFile(file.user, file.name) }}>&#10060;</button></td>
                                     </tr>
                                 ))}
                         </tbody>
                     </table>
+
                     <div className="pagination-container">
-                        <span>Mostrando página {currentPage} de {Math.ceil(filteredFiles.length / filesPerPage)}</span>
+                        <span>Mostrando página {currentPage} de {filteredFiles.length === 0 ? 1 : Math.ceil(filteredFiles.length / filesPerPage)}</span>
                         <div>
                             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                 Anterior

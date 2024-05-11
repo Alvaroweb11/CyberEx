@@ -52,8 +52,8 @@ export function MyRepositoryPage() {
             const response = await deleteFiles({ uid, fileName });
 
             // Actualizar la lista de archivos después de la eliminación
-            const updatedFiles = files.filter(file => file.name !== fileName);
-            setFiles(updatedFiles);
+            const data = await getOwnFiles({ uid });
+            setFiles(data.files);
         } catch (error) {
             console.error(error);
         }
@@ -146,7 +146,7 @@ export function MyRepositoryPage() {
                     </table>
 
                     <div className="pagination-container">
-                        <span>Mostrando página {currentPage} de {Math.ceil(filteredFiles.length / filesPerPage)}</span>
+                    <span>Mostrando página {currentPage} de {filteredFiles.length === 0 ? 1 : Math.ceil(filteredFiles.length / filesPerPage)}</span>
                         <div>
                             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                 Anterior

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState: {
+    status: null,
     points: 0,
     hashTask1: 0,
     hashTask2: 0,
@@ -11,6 +12,7 @@ export const tasksSlice = createSlice({
   },
   reducers: {
     addPoints: (state, {payload}) => {
+      state.status = "checked";
       state.points = payload.points;
       state.hashTask1 = payload.hashTask1;
       state.hashTask2 = payload.hashTask2;
@@ -22,7 +24,7 @@ export const tasksSlice = createSlice({
       const newState = { ...state, ...action.payload };
       localStorage.setItem('tasks', JSON.stringify(newState));
       return newState;
-    },
+    }
   }
 });
 

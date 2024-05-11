@@ -4,7 +4,6 @@ const { generateJWT } = require('../helpers/generateJWT');
 require('dotenv').config();
 const mysql = require('mysql');
 const util = require('util');
-const { get } = require('http');
 
 const registerUser = async (req, res = response) => {
 
@@ -43,7 +42,8 @@ const registerUser = async (req, res = response) => {
         const passwordHash = bcrypt.hashSync(password, salt);
 
         const result = await query('INSERT INTO usuarios (username, email, password) VALUES (?, ?, ?)', [username, email, passwordHash]);
-        const result1 = await query('INSERT INTO ejercicios (idUser, points, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0, 0]);
+        await query('INSERT INTO ejercicios (idUser, points, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0, 0]);
+        await query('INSERT INTO trazabilidad (idUser, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0]);
 
         // Generar JWT
         const token = await generateJWT(result.insertId, username);
@@ -181,31 +181,75 @@ const updatePoints = async (req, res = response) => {
         });
         const query = util.promisify(connection.query).bind(connection);
 
-        const rows = await query('SELECT * FROM ejercicios WHERE idUser = ?', [uid]);
+        let updateQuery = 'UPDATE ejercicios SET ';
+        let queryParams = [];
 
-        if (rows.length === 0) {
-            await query('INSERT INTO ejercicios (idUser, points, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?)', [uid, points, hashTask1, hashTask2, hashTask3, steganographyTask1]);
-        } else {
-            let updateQuery = 'UPDATE ejercicios SET ';
-            let queryParams = [];
-
-            for (let [key, value] of Object.entries(req.body)) {
-                if (value !== undefined && key !== 'uid') {
-                    updateQuery += `${key} = ?, `;
-                    queryParams.push(value);
-                }
+        for (let [key, value] of Object.entries(req.body)) {
+            if (value !== undefined && key !== 'uid') {
+                updateQuery += `${key} = ?, `;
+                queryParams.push(value);
             }
-
-            updateQuery = updateQuery.slice(0, -2); // Remove the last comma and space
-            updateQuery += ' WHERE idUser = ?';
-            queryParams.push(uid);
-
-            await query(updateQuery, queryParams);
         }
+
+        updateQuery = updateQuery.slice(0, -2); // Remove the last comma and space
+        updateQuery += ' WHERE idUser = ?';
+        queryParams.push(uid);
+
+        await query(updateQuery, queryParams);
 
         res.status(201).json({
             ok: true,
+            points: req.body.points,
+            hashTask1: req.body.hashTask1,
+            hashTask2: req.body.hashTask2,
+            hashTask3: req.body.hashTask3,
+            steganographyTask1: req.body.steganographyTask1,
             msg: 'Puntos actualizados'
+        })
+
+        connection.end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+}
+
+const updateTraceability = async (req, res = response) => {
+
+    const { uid } = req.body;
+
+    try {
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        let updateQuery = 'UPDATE trazabilidad SET ';
+        let queryParams = [];
+
+        for (let [key, value] of Object.entries(req.body)) {
+            if (value !== undefined && key !== 'uid') {
+                updateQuery += `${key} = ?, `;
+                queryParams.push(value);
+            }
+        }
+
+        updateQuery = updateQuery.slice(0, -2); // Remove the last comma and space
+        updateQuery += ' WHERE idUser = ?';
+        queryParams.push(uid);
+
+        await query(updateQuery, queryParams);
+
+        res.status(201).json({
+            ok: true,
+            msg: 'Trazabilidad actualizada'
         })
 
         connection.end();
@@ -305,12 +349,30 @@ async function getUserName(uid) {
     return rows[0] ? rows[0].username : 'Desconocido';
 }
 
+async function getUserId(username) {
+    const connection = await mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    });
+    const query = util.promisify(connection.query).bind(connection);
+
+    const rows = await query('SELECT id FROM usuarios WHERE username = ?', [username]);
+
+    connection.end();
+
+    return rows[0] ? rows[0].id : -1;
+}
+
 module.exports = {
     registerUser,
     loginUser,
     revalidateToken,
     updatePoints,
+    updateTraceability,
     getPoints,
     getRanking,
-    getUserName
+    getUserName,
+    getUserId
 }

@@ -30,6 +30,9 @@ export const Layout = ({ children, halfScreen }) => {
     };
   }, []);
 
+  useEffect(() => {
+  }, [points]);
+
   return (
     <div className="main-container">
       <nav className="navbar navbar-expand-md navbar-dark fixed-top colores" style={navbarStyle}>
