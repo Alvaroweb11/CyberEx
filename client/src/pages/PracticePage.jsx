@@ -16,10 +16,10 @@ export function PracticePage() {
                     html: `<p>Los ejercicios fáciles puntúan sobre 100.</p>
                            <p>Los ejercicios difíciles puntúan sobre 200.</p>
                            <br>
-                           <p>Tras 10 minutos, la puntuación bajará 1 pto por minuto.</p>
+                           <p>Tras 10 minutos, la puntuación bajará 1 CP por minuto.</p>
                            <p>El tiempo comienza a correr al iniciar la máquina.</p>
                            <br>
-                           <p>Puedes canjear pistas por 20 puntos.</p>`,
+                           <p>Puedes canjear pistas por 20 CP.</p>`,
                     icon: 'info',
                     confirmButtonText: 'Entendido'
                 });

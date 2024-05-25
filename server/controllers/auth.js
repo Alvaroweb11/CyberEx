@@ -53,6 +53,7 @@ const registerUser = async (req, res = response) => {
             uid: result.insertId,
             username: username,
             email: email,
+            fullName: result.fullName,
             role: result.role,
             token
         })
@@ -60,7 +61,6 @@ const registerUser = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
@@ -110,6 +110,7 @@ const loginUser = async (req, res = response) => {
             uid: user.id,
             username: user.username,
             email: user.email,
+            fullName: user.fullName,
             role: user.role,
             token
         })
@@ -117,7 +118,6 @@ const loginUser = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
@@ -152,18 +152,118 @@ const revalidateToken = async (req, res = response) => {
             uid: user.id,
             username: user.username,
             email: user.email,
+            fullName: user.fullName,
             role: user.role,
             token
         })
 
     } catch (error) {
-
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
         });
+    }
 
+}
+
+const updateUser = async (req, res = response) => {
+    
+    const { uid, username, email, fullName } = req.body;
+
+    try {
+
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        // Verificar si el nombre de usuario ya existe
+        const [existingUsername] = await query('SELECT * FROM usuarios WHERE username = ? AND id != ?', [username, uid]);
+        if (existingUsername) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El nombre de usuario ya está en uso'
+            });
+        }
+
+        // Verificar si el correo electrónico ya existe
+        const [existingEmail] = await query('SELECT * FROM usuarios WHERE email = ? AND id != ?', [email, uid]);
+        if (existingEmail) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El correo electrónico ya está en uso'
+            });
+        }
+
+        // Actualizar información del usuario
+        await query('UPDATE usuarios SET username = ?, email = ?, fullName = ? WHERE id = ?', [username, email, fullName, uid]);
+
+        // Obtener información actualizada del usuario
+        const [user] = await query('SELECT * FROM usuarios WHERE id = ?', [uid]);
+
+        res.json({
+            ok: true,
+            username: user.username,
+            email: user.email,
+            fullName: user.fullName
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+}
+
+const updatePassword = async (req, res = response) => {
+
+    const { uid, oldPassword, newPassword } = req.body;
+
+    try {
+
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        const [user] = await query('SELECT * FROM usuarios WHERE id = ?', [uid]);
+
+        // Validar contraseña actual
+        const validPassword = bcrypt.compareSync(oldPassword, user.password);
+        if (!validPassword) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Password incorrecto'
+            });
+        }
+
+        // Encriptar nueva contraseña
+        const salt = bcrypt.genSaltSync();
+        const passwordHash = bcrypt.hashSync(newPassword, salt);
+
+        // Actualizar contraseña
+        await query('UPDATE usuarios SET password = ? WHERE id = ?', [passwordHash, uid]);
+
+        res.json({
+            ok: true,
+            msg: 'Contraseña actualizada'
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
     }
 
 }
@@ -210,13 +310,49 @@ const updatePoints = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }
 }
+
+const addPoints  = async (req, res = response) => {
+    
+        const { username, points } = req.body;
+
+        const userId = await getUserId(username);
+    
+        try {
+            const connection = await mysql.createConnection({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
+            });
+            const query = util.promisify(connection.query).bind(connection);
+    
+            const rows = await query('SELECT points FROM ejercicios WHERE idUser = ?', [userId]);
+    
+            const userPoints = rows[0].points;
+    
+            await query('UPDATE ejercicios SET points = ? WHERE idUser = ?', [userPoints + points, userId]);
+    
+            res.status(201).json({
+                ok: true,
+                points: userPoints + points,
+                msg: 'Puntos actualizados'
+            })
+    
+            connection.end();
+    
+        } catch (error) {
+            res.status(500).json({
+                ok: false,
+                msg: 'Por favor hable con el administrador'
+            });
+        }
+    }
 
 const updateTraceability = async (req, res = response) => {
 
@@ -255,7 +391,6 @@ const updateTraceability = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
@@ -293,7 +428,6 @@ const getPoints = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
@@ -324,7 +458,6 @@ const getRanking = async (req, res = response) => {
         connection.end();
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Por favor hable con el administrador'
@@ -369,7 +502,10 @@ module.exports = {
     registerUser,
     loginUser,
     revalidateToken,
+    updateUser,
+    updatePassword,
     updatePoints,
+    addPoints,
     updateTraceability,
     getPoints,
     getRanking,

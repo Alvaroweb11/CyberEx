@@ -152,7 +152,7 @@ export function PracticePageHash() {
                                         <button
                                             type="button"
                                             className="btn btn-outline-secondary col-md-4"
-                                            onClick={() => { setTimeLeft(prevTime => prevTime + 60 * 60); }}> {/* Añadir una hora */}
+                                            onClick={() => { setTimeLeft(prevTime => prevTime + 60 * 60 >= 7200 ? 10800 : prevTime + 60 * 60); }}>
                                             Add 1 hour
                                         </button>
 

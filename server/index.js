@@ -6,7 +6,7 @@ require('dotenv').config();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
-const { uploadFiles, getFiles, getOwnFiles, deleteFiles, downloadFiles, getAdminFiles, deleteAdminFiles, downloadAdminFiles, approveAdminFiles } = require('./upload/config');
+const { uploadFiles, getFiles, getOwnFiles, deleteFiles, downloadFiles, getAdminFiles, deleteAdminFiles, downloadAdminFiles, approveAdminFiles, uploadAvatars, getAvatars } = require('./upload/config');
 
 // Limpiar consola
 console.clear();
@@ -34,6 +34,8 @@ app.get('/getAdminFiles', getAdminFiles);
 app.post('/deleteAdminFiles', deleteAdminFiles);
 app.post('/downloadAdminFiles', downloadAdminFiles);
 app.post('/approveAdminFiles', approveAdminFiles);
+app.post('/uploadAvatars', uploadAvatars);
+app.post('/getAvatars', getAvatars);
 
 // Directorio Público
 app.use( express.static('public') );

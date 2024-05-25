@@ -1,7 +1,6 @@
 import '../css/style.css';
 import { Layout } from "../layout/Layout";
 import { useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
 import { getFiles } from '../utils';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -13,6 +12,7 @@ export function RepositoryPage() {
     const [filesPerPage, setFilesPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
+    const [difficultyFilter, setDifficultyFilter] = useState("");
 
     useEffect(() => {
         const fetchFiles = async () => {
@@ -27,9 +27,9 @@ export function RepositoryPage() {
         fetchFiles();
     }, []);
 
-    async function downloadFile(uid, fileName) {
+    async function downloadFile(username, fileName, category, difficulty) {
         try {
-            const blob = await downloadFiles({ uid, fileName });
+            const blob = await downloadFiles({ username, fileName, category, difficulty });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -49,10 +49,21 @@ export function RepositoryPage() {
         return format(new Date(date), "d 'de' MMMM 'de' yyyy, HH:mm'h'", { locale: es });
     }
 
+    function formatDifficulty(difficulty) {
+        const difficultyMap = {
+            "facil": "Fácil",
+            "media": "Media",
+            "dificil": "Difícil",
+        };
+
+        return difficultyMap[difficulty] || difficulty;
+    }
+
     const categories = [...new Set(files.map(file => file.category))];
+    const difficulties = [...new Set(files.map(file => file.difficulty))];
 
     const filteredFiles = files
-        .filter(file => file.name.includes(searchTerm) && (categoryFilter === "" || file.category === categoryFilter))
+        .filter(file => file.name.toLowerCase().includes(searchTerm.toLowerCase()) && (categoryFilter === "" || file.category === categoryFilter) && (difficultyFilter === "" || file.difficulty === difficultyFilter))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
@@ -87,6 +98,14 @@ export function RepositoryPage() {
                                     ))}
                                 </select>
                             </span>
+                            <span>Filtrar por dificultad:
+                                <select onChange={(e) => setDifficultyFilter(e.target.value)}>
+                                    <option value="">Todas las dificultades</option>
+                                    {difficulties.map((difficulty, index) => (
+                                        <option key={index} value={difficulty}>{formatDifficulty(difficulty)}</option>
+                                    ))}
+                                </select>
+                            </span>
                         </div>
                     </div>
 
@@ -95,6 +114,7 @@ export function RepositoryPage() {
                             <tr>
                                 <th>Nombre del fichero</th>
                                 <th>Categoría</th>
+                                <th>Dificultad</th>
                                 <th>Usuario</th>
                                 <th>Tamaño</th>
                                 <th>Fecha de subida</th>
@@ -105,8 +125,9 @@ export function RepositoryPage() {
                                 .slice((currentPage - 1) * filesPerPage, currentPage * filesPerPage)
                                 .map((file, index) => (
                                     <tr key={index}>
-                                        <td><button onClick={() => { downloadFile(file.name) }}>{file.name}</button></td>
-                                        <td>{file.category}</td>
+                                        <td><button onClick={() => { downloadFile(file.user, file.name, file.category, file.difficulty) }}>{file.name}</button></td>
+                                        <td>{file.category.charAt(0).toUpperCase() + file.category.slice(1)}</td>
+                                        <td>{formatDifficulty(file.difficulty)}</td>
                                         <td>{file.user}</td>
                                         <td>{formatFileSize(file.size)}</td>
                                         <td>{formatDate(file.date)}</td>
@@ -115,7 +136,7 @@ export function RepositoryPage() {
                         </tbody>
                     </table>
                     <div className="pagination-container">
-                    <span>Mostrando página {currentPage} de {filteredFiles.length === 0 ? 1 : Math.ceil(filteredFiles.length / filesPerPage)}</span>
+                        <span>Mostrando página {currentPage} de {filteredFiles.length === 0 ? 1 : Math.ceil(filteredFiles.length / filesPerPage)}</span>
                         <div>
                             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                 Anterior

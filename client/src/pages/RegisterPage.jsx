@@ -28,7 +28,7 @@ export function RegisterPage() {
             return Swal.fire('Error', 'Password must be at least 8 characters long', 'error');
         }
         if (!isValidPassword(password)) {
-            return Swal.fire('Error', 'Password must contain at least one number, one uppercase letter, one lowercase letter, one special character and be at least 8 characters long', 'error');
+            return Swal.fire('Error', 'Password must contain at least one number, one uppercase letter and one lowercase letter', 'error');
         }
         dispatch(startCreatingUser({email, username, password}));
     }
@@ -40,7 +40,7 @@ export function RegisterPage() {
             <div className="container main">
                 <div className="home-break"></div>
                 <form onSubmit={onSubmit}>
-                    <div className="form-group">
+                    <div className="form-group" style={{ margin: "10px" }}>
                         <label>Username</label>
                         <input
                             className="form-control"
@@ -51,7 +51,7 @@ export function RegisterPage() {
                             placeholder="Username"
                         />
                     </div>
-                    <div className="form-group">
+                    <div className="form-group" style={{ margin: "10px" }}>
                         <label>Email</label>
                         <input
                             className="form-control"
@@ -62,7 +62,7 @@ export function RegisterPage() {
                             placeholder="example@example.com"
                         />
                     </div>
-                    <div className="row">
+                    <div className="row" style={{ margin: "0px" }}>
                         <div className="form-group col-md-6">
                             <label>Password</label>
                             <input
@@ -89,7 +89,7 @@ export function RegisterPage() {
                         </div>
                     </div>
                     <br />
-                    <button type="submit" className="btn btn-primary">Register</button>
+                    <button type="submit" className="btn btn-primary" style={{ marginLeft: "10px" }}>Register</button>
                 </form>
 
                 <div className="home-break"></div>

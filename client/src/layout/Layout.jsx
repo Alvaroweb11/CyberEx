@@ -96,11 +96,10 @@ export const Layout = ({ children, halfScreen }) => {
                         <ul className="flex flex-col gap-2">
                           <li><a href="/profile">Perfil</a></li>
                           <li><a href="/myrepository">Mi Repositorio</a></li>
-                          <li><a href="/settings">Opciones</a></li>
                           {role === 'admin' &&
                             <li><a href="/admin">Admin</a></li>
                           }
-                          <li role="button" onClick={() => dispatch(logout())}>Logout</li>
+                          <li role="button" style={{color: "red", marginTop: "10px"}} onClick={() => dispatch(logout())}>Logout</li>
                         </ul>
                       </div>}
                   </li>

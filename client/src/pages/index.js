@@ -9,3 +9,5 @@ export * from "./LeaderboardPage";
 export * from "./RepositoryPage";
 export * from "./MyRepositoryPage";
 export * from "./AdminRepositoryPage";
+export * from "./ProfilePage";
+export * from "./SecurityPage";

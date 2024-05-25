@@ -1,4 +1,5 @@
-import { getRegister, getLogin, getRenewToken, getUpdateTasks, getPoints, getUpdateTraceability } from "../../../utils";
+import Swal from "sweetalert2";
+import { getRegister, getLogin, getRenewToken, getUpdateTasks, getPoints, getUpdateTraceability, getUpdateUser } from "../../../utils";
 import { checkingCredentials, login, logout } from "./authSlice";
 import { addPoints, updateTask } from "./tasksSlice";
 
@@ -9,7 +10,6 @@ export const checkingAuthentication = () => {
 }
 
 export const startCreatingUser = ({ email, password, username }) => {
-
   return async (dispatch) => {
     dispatch(checkingCredentials());
 
@@ -61,5 +61,15 @@ export const getTasks = ({ uid }) => {
   return async (dispatch) => {
     const result = await getPoints({ uid });
     dispatch(addPoints(result));
+  }
+}
+
+export const updateUser = ({ uid, email, fullName, username }) => {
+  return async () => {
+    const result = await getUpdateUser({ uid, username, email, fullName });
+
+    if (result.ok) {
+      Swal.fire('¡Éxito!', 'Usuario actualizado correctamente', 'success');
+    }
   }
 }

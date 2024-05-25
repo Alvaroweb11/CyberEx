@@ -16,9 +16,9 @@ const uploadFiles = async (req, res) => {
         const allowedExtensions = ['.rar', '.zip', '.tar.gz'];
 
         if (!allowedExtensions.includes(ext)) {
-            return res.status(400).json({ msg: 'Invalid file extension' });
+            return res.status(412).json({ msg: 'Invalid file extension' });
         }
-        
+
         // Construye una ruta al directorio 'repository'
         const uploadDir = path.resolve(__dirname, '..', '..', 'repository', 'admin');
 
@@ -29,7 +29,7 @@ const uploadFiles = async (req, res) => {
                 console.error(err);
                 return res.status(500).send(err);
             }
-            res.json({ 
+            res.json({
                 ok: true,
                 data: {
                     fileName: file.name,
@@ -60,22 +60,34 @@ const getFiles = async (req, res) => {
 
         for (const uid of userDirs) {
             const userDir = path.join(baseDir, uid);
-            const files = await fs.promises.readdir(userDir);
+            const categories = await fs.promises.readdir(userDir);
 
-            const userName = await getUserName(Number(uid));
+            for (const category of categories) {
+                const categoryDir = path.join(userDir, category);
+                const difficulties = await fs.promises.readdir(categoryDir);
 
-            const data = files.map(file => {
-                const stats = fs.statSync(path.join(userDir, file));
-                return {
-                    uid: uid,
-                    name: file,
-                    user: userName,
-                    size: stats.size,
-                    date: stats.birthtime
+                for (const difficulty of difficulties) {
+                    const difficultyDir = path.join(categoryDir, difficulty);
+                    const files = await fs.promises.readdir(difficultyDir);
+
+                    const userName = await getUserName(Number(uid));
+
+                    const data = files.map(file => {
+                        const stats = fs.statSync(path.join(difficultyDir, file));
+                        return {
+                            uid: uid,
+                            name: file,
+                            user: userName,
+                            size: stats.size,
+                            date: stats.birthtime,
+                            category: category,
+                            difficulty: difficulty
+                        }
+                    });
+
+                    allFiles.push(...data);
                 }
-            });
-
-            allFiles.push(...data);
+            }
         }
 
         res.json({ files: allFiles });
@@ -94,21 +106,40 @@ const getOwnFiles = async (req, res) => {
         const { uid } = req.body;
         const userDir = path.resolve(__dirname, '..', '..', 'repository', String(uid));
 
-        let files = [];
+        let categories = [];
         if (fs.existsSync(userDir)) {
-            files = await fs.promises.readdir(userDir);
+            categories = await fs.promises.readdir(userDir);
         }
 
-        const data = files.map(file => {
-            const stats = fs.statSync(path.join(userDir, file));
-            return {
-                name: file,
-                size: stats.size,
-                date: stats.birthtime
-            }
-        });
+        const allFiles = [];
 
-        res.json({ files: data });
+        for (const category of categories) {
+            const categoryDir = path.join(userDir, category);
+            const difficulties = await fs.promises.readdir(categoryDir);
+
+            for (const difficulty of difficulties) {
+                const difficultyDir = path.join(categoryDir, difficulty);
+                const files = await fs.promises.readdir(difficultyDir);
+
+                const userName = await getUserName(Number(uid));
+
+                const data = files.map(file => {
+                    const stats = fs.statSync(path.join(difficultyDir, file));
+                    return {
+                        name: file,
+                        user: userName,
+                        size: stats.size,
+                        date: stats.birthtime,
+                        category: category,
+                        difficulty: difficulty
+                    }
+                });
+
+                allFiles.push(...data);
+            }
+        }
+
+        res.json({ files: allFiles });
 
     } catch (error) {
         console.log(error);
@@ -121,13 +152,27 @@ const getOwnFiles = async (req, res) => {
 
 const deleteFiles = async (req, res) => {
     try {
-        const { uid, fileName } = req.body;
+        const { uid, fileName, category, difficulty } = req.body;
         const userDir = path.resolve(__dirname, '..', '..', 'repository', String(uid));
-        const filePath = path.join(userDir, fileName);
+        const categoryDir = path.join(userDir, category);
+        const difficultyDir = path.join(categoryDir, difficulty);
+        const filePath = path.join(difficultyDir, fileName);
 
         fs.unlinkSync(filePath);
 
-        // Comprobar si la carpeta está vacía
+        // Comprobar si la carpeta de dificultad está vacía
+        if (fs.readdirSync(difficultyDir).length === 0) {
+            // Si está vacía, eliminar la carpeta
+            fs.rmdirSync(difficultyDir);
+        }
+
+        // Comprobar si la carpeta de categoría está vacía
+        if (fs.readdirSync(categoryDir).length === 0) {
+            // Si está vacía, eliminar la carpeta
+            fs.rmdirSync(categoryDir);
+        }
+
+        // Comprobar si la carpeta de usuario está vacía
         if (fs.readdirSync(userDir).length === 0) {
             // Si está vacía, eliminar la carpeta
             fs.rmdirSync(userDir);
@@ -146,9 +191,12 @@ const deleteFiles = async (req, res) => {
 
 const downloadFiles = async (req, res) => {
     try {
-        const { uid, fileName } = req.body;
-        const userDir = path.resolve(__dirname, '..', '..', 'repository', String(uid));
-        const filePath = path.join(userDir, fileName);
+        const { username, fileName, category, difficulty } = req.body;
+
+        const userId = await getUserId(username);
+
+        const userDir = path.resolve(__dirname, '..', '..', 'repository', String(userId));
+        const filePath = path.join(userDir, category, difficulty, fileName);
 
         res.download(filePath, fileName);
 
@@ -291,6 +339,91 @@ const downloadAdminFiles = async (req, res) => {
     }
 }
 
+const uploadAvatars = async (req, res) => {
+    try {
+        if (!req.files) {
+            return res.status(400).json({ msg: 'No file uploaded' });
+        }
+
+        const { uid } = req.body;
+        const file = req.files.file;
+
+        // Verifica la extensión del archivo
+        const ext = path.extname(file.name);
+        const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+
+        if (!allowedExtensions.includes(ext)) {
+            return res.status(412).json({ msg: 'Invalid file extension' });
+        }
+
+        // Construye una ruta al directorio 'avatars'
+        const uploadDir = path.resolve(__dirname, '..', '..', 'repository', 'avatars');
+
+        // Elimina cualquier archivo previo con el mismo nombre pero con una extensión diferente
+        for (let oldExt of allowedExtensions) {
+            const oldPath = path.join(uploadDir, `${uid}${oldExt}`);
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
+        }
+
+        const uploadPath = path.join(uploadDir, `${uid}${ext}`);
+
+        file.mv(uploadPath, err => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send(err);
+            }
+            res.json({
+                ok: true,
+                data: {
+                    fileName: `${uid}${ext}`,
+                    fileSize: file.size,
+                    fileType: file.mimetype
+                }
+            });
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+}
+
+const getAvatars = async (req, res) => {
+    try {
+        const { uid } = req.body;
+
+        const baseDir = path.resolve(__dirname, '..', '..', 'repository', 'avatars');
+        const extensions = ['png', 'jpg', 'jpeg'];
+        let avatarPath = null;
+
+        for (let ext of extensions) {
+            let tempPath = path.join(baseDir, `${uid}.${ext}`);
+            if (fs.existsSync(tempPath)) {
+                avatarPath = tempPath;
+                break;
+            }
+        }
+
+        if (!avatarPath) {
+            avatarPath = path.join(baseDir, '0.png');
+        }
+
+        res.sendFile(avatarPath);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+}
+
 module.exports = {
     uploadFiles,
     getFiles,
@@ -300,5 +433,7 @@ module.exports = {
     deleteAdminFiles,
     downloadAdminFiles,
     getAdminFiles,
-    approveAdminFiles
+    approveAdminFiles,
+    uploadAvatars,
+    getAvatars
 }

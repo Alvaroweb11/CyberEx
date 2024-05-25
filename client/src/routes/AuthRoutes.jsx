@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { HomePage, LeaderboardPage, LearnPage, MyRepositoryPage, PracticePage, PracticePageHash, PracticePageSteganography, RepositoryPage, AdminRepositoryPage } from "../pages";
+import { HomePage, LeaderboardPage, LearnPage, MyRepositoryPage, PracticePage, PracticePageHash, PracticePageSteganography, RepositoryPage, AdminRepositoryPage, ProfilePage, SecurityPage } from "../pages";
 
 export const AuthRoutes = () => {
     return (
@@ -12,8 +12,8 @@ export const AuthRoutes = () => {
             <Route path="/repository" element={<RepositoryPage />} />
             <Route path="/myrepository" element={<MyRepositoryPage />} />
             <Route path="/admin" element={<AdminRepositoryPage />} />
-            {/* <Route path="/settings" element={<SettingsPage />} /> */}
-            {/* <Route path="/profile" element={<ProfilePage />} /> */}
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/security" element={<SecurityPage />} />
 
             <Route path="/" element={<HomePage />} />
             <Route path="/*" element={<Navigate to={"/"} />} />

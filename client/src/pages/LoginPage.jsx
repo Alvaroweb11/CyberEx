@@ -25,7 +25,7 @@ export function LoginPage() {
       <div className="container main">
         <div className="home-break"></div>
         <form onSubmit={onSubmit}>
-          <div className="form-group">
+          <div className="form-group" style={{ margin: "10px" }}>
             <label>Email</label>
             <input id="email"
               className="form-control"
@@ -35,7 +35,7 @@ export function LoginPage() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group" style={{ margin: "10px" }}>
             <label>Password</label>
             <input id="password"
               className="form-control"
@@ -47,7 +47,7 @@ export function LoginPage() {
             />
           </div>
           <br />
-          <button type="submit" className="btn btn-primary">Login</button>
+          <button type="submit" className="btn btn-primary" style={{ marginLeft: "10px" }}>Login</button>
         </form>
 
         <div className="home-break"></div>

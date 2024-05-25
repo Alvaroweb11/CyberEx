@@ -639,3 +639,25 @@ body {
 .tabla-ejercicios thead tr {
   background-color: #f2f2f2;
 }
+
+.avatar:hover {
+  border: 3px solid rgba(17, 27, 41, 0.95);
+}
+
+.account-link {
+  position: relative;
+  font-weight: bold;
+}
+
+.account-link::after {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid rgba(17, 27, 41, 0.95);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}

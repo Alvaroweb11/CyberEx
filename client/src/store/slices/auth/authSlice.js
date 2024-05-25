@@ -7,6 +7,7 @@ export const authSlice = createSlice({
     uid: null,
     username: null,
     email: null,
+    fullName: null,
     role: null,
     token: null,
     msg: null
@@ -17,6 +18,7 @@ export const authSlice = createSlice({
       state.uid = payload.uid;
       state.username = payload.username;
       state.email = payload.email;
+      state.fullName = payload.fullName;
       state.role = payload.role;
       state.token = payload.token;
       state.msg = null;
@@ -27,6 +29,7 @@ export const authSlice = createSlice({
       state.uid = null;
       state.username = null;
       state.email = null;
+      state.fullName = null;
       state.role = null;
       state.token = null;
       state.msg = payload?.msg;

@@ -1,16 +1,17 @@
 import '../css/style.css';
 import { Layout } from "../layout/Layout";
 import { useEffect, useState } from 'react';
-import { getAdminFiles, approveAdminFiles, deleteAdminFiles, downloadAdminFiles } from '../utils';
+import { getAdminFiles, approveAdminFiles, deleteAdminFiles, downloadAdminFiles, addPoints } from '../utils';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import Swal from 'sweetalert2';
 
 export function AdminRepositoryPage() {
     const [files, setFiles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [filesPerPage, setFilesPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("");
+    const [searchUser, setSearchUser] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedDifficulty, setSelectedDifficulty] = useState("");
 
@@ -44,6 +45,10 @@ export function AdminRepositoryPage() {
         try {
             await approveAdminFiles({ username, fileName, selectedCategory, selectedDifficulty });
 
+            // Añadir puntos al usuario
+            const points = formatPoints(selectedDifficulty);
+            await addPoints({ username, points });
+
             // Volver a buscar los archivos del servidor después de la eliminación
             const data = await getAdminFiles();
             setFiles(data.files);
@@ -73,10 +78,18 @@ export function AdminRepositoryPage() {
         return format(new Date(date), "d 'de' MMMM 'de' yyyy, HH:mm'h'", { locale: es });
     }
 
-    const categories = [...new Set(files.map(file => file.category))];
+    function formatPoints(points) {
+        const pointsMap = {
+            "facil": 25,
+            "media": 50,
+            "dificil": 75,
+        };
+
+        return pointsMap[points] || 0;
+    }
 
     const filteredFiles = files
-        .filter(file => file.name.includes(searchTerm) && (categoryFilter === "" || file.category === categoryFilter))
+        .filter(file => file.name.toLowerCase().includes(searchTerm.toLowerCase()) && file.user.toLowerCase().includes(searchUser.toLowerCase()))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
@@ -103,13 +116,9 @@ export function AdminRepositoryPage() {
                                 Buscar:
                                 <input type="text" placeholder="Nombre del Fichero" onChange={(e) => setSearchTerm(e.target.value)} />
                             </span>
-                            <span>Filtrar por categoría:
-                                <select onChange={(e) => setCategoryFilter(e.target.value)}>
-                                    <option value="">Todas las categorías</option>
-                                    {categories.map((category, index) => (
-                                        <option key={index} value={category}>{category}</option>
-                                    ))}
-                                </select>
+                            <span>
+                                Usuario:
+                                <input type="text" placeholder="Nombre del Usuario" style={{ marginRight: "100px" }} onChange={(e) => setSearchUser(e.target.value)} />
                             </span>
                         </div>
                     </div>
@@ -132,22 +141,33 @@ export function AdminRepositoryPage() {
                                     <tr key={index}>
                                         <td><button onClick={() => { downloadAdminFile(file.user, file.name) }}>{file.name}</button></td>
                                         <td>
-                                            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                            <select value={selectedCategory[index] || ''} onChange={(e) => setSelectedCategory({ ...selectedCategory, [index]: e.target.value })}>
+                                                <option value="" disabled hidden>Categoría</option>
                                                 <option value="hash">Hash</option>
                                                 <option value="steganography">Steganography</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)}>
+                                            <select value={selectedDifficulty[index] || ''} onChange={(e) => setSelectedDifficulty({ ...selectedDifficulty, [index]: e.target.value })}>
+                                                <option value="" disabled hidden>Dificultad</option>
                                                 <option value="facil">Fácil</option>
-                                                <option value="medio">Medio</option>
+                                                <option value="media">Media</option>
                                                 <option value="dificil">Difícil</option>
                                             </select>
                                         </td>
                                         <td>{file.user}</td>
                                         <td>{formatFileSize(file.size)}</td>
                                         <td>{formatDate(file.date)}</td>
-                                        <td><button onClick={() => { approveAdminFile(file.user, file.name, selectedCategory, selectedDifficulty) }}>&#10004;</button></td>
+                                        <td><button onClick={() => {
+                                            if (selectedCategory[index] === "" || selectedCategory[index] === undefined) {
+                                                return Swal.fire('Error', 'Especifica la categoría', 'error');
+                                            } else if (selectedDifficulty[index] === "" || selectedDifficulty[index] === undefined) {
+                                                return Swal.fire('Error', 'Especifica la dificultad', 'error');
+                                            }
+                                            approveAdminFile(file.user, file.name, selectedCategory[index], selectedDifficulty[index]);
+                                            setSelectedCategory({});
+                                            setSelectedDifficulty({});
+                                        }}>&#10004;</button></td>
                                         <td><button onClick={() => { deleteAdminFile(file.user, file.name) }}>&#10060;</button></td>
                                     </tr>
                                 ))}
