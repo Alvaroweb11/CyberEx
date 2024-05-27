@@ -8,7 +8,7 @@ export const ExerciseList = () => {
 		<div className='flex flex-row flex-wrap justify-center gap-4 mt-10'>
 			{/* Exercise Link Hash */}
 			<ExerciseCard
-				exercise='Hash'
+				exercise='Hash - Fácil'
 				src={imgHash}
 				alt={`Ejercicio de hash`}
 				gradientColor=' from-purple-500 to-pink-500'
@@ -16,7 +16,7 @@ export const ExerciseList = () => {
 			    
             {/* Exercise Link Steganography */}
             <ExerciseCard
-                exercise='Steganography'
+                exercise='Steganography - Difícil'
                 src={imgSteganography}
                 alt={`Ejercicio de esteganografía`}
                 gradientColor=' from-blue-500 to-green-500'

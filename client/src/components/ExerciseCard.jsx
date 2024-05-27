@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 
 export const ExerciseCard = ({ exercise, alt, src, gradientColor }) => {
+
+	const dificultad = exercise.includes('Fácil') ? 'easy' : 'hard';
+	
 	return (
 		<Link
-			to={`/practice/${exercise.toLowerCase()}`}
+			to={`/practice/${exercise.toLowerCase().split(' ')[0] + dificultad}`}
 			className={`flex flex-col justify-between basis-1/4 bg-slate-500 rounded-2xl overflow-hidden bg-gradient-to-r ${gradientColor} transition-all hover:scale-105`}
 		>
 			<div className='p-5 flex justify-center items-center'>

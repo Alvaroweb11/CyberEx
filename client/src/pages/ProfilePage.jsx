@@ -4,8 +4,7 @@ import '../css/style.css';
 import { Layout } from "../layout/Layout"
 import { updateUser } from "../store/slices/auth"
 import { useDispatch } from "react-redux"
-import { uploadAvatars } from '../utils';
-import { getAvatars } from '../utils';
+import { uploadAvatars, getAvatars } from '../utils';
 
 export function ProfilePage() {
     const { uid, username, email, fullName } = useSelector(state => state.auth);
@@ -24,7 +23,6 @@ export function ProfilePage() {
         email: '',
         fullName: ''
     });
-
     
     const [avatar, setAvatar] = useState(null);
     const [avatarChanged, setAvatarChanged] = useState(false);

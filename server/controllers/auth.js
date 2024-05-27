@@ -126,6 +126,40 @@ const loginUser = async (req, res = response) => {
 
 }
 
+const deleteUser = async (req, res = response) => {
+
+    const { uid } = req.body;
+
+    try {
+
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME
+        });
+        const query = util.promisify(connection.query).bind(connection);
+
+        await query('DELETE FROM usuarios WHERE id = ?', [uid]);
+        await query('DELETE FROM ejercicios WHERE idUser = ?', [uid]);
+        await query('DELETE FROM trazabilidad WHERE idUser = ?', [uid]);
+
+        res.json({
+            ok: true,
+            msg: 'Usuario eliminado'
+        })
+
+        connection.end();
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+}
+
 const revalidateToken = async (req, res = response) => {
 
     const { uid } = req.body;
@@ -501,6 +535,7 @@ async function getUserId(username) {
 module.exports = {
     registerUser,
     loginUser,
+    deleteUser,
     revalidateToken,
     updateUser,
     updatePassword,

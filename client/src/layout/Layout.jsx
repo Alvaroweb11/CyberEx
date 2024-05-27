@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 import { Header } from "../components/Header";
 import { useNavbar } from "../hooks";
 import { logout } from "../store/slices/auth";
+import { getAvatars } from "../utils";
 
 import "../css/dropDownProfile.css";
 
 export const Layout = ({ children, halfScreen }) => {
 
-  const { status, username, role } = useSelector(state => state.auth);
+  const { uid, status, username, role } = useSelector(state => state.auth);
   const { points } = useSelector(state => state.tasks);
   const dispatch = useDispatch();
   const backgroundColor = useNavbar();
   const navbarStyle = halfScreen ? { justifyContent: 'center', width: '50%', backgroundColor } : { backgroundColor };
   const [isPopoverVisible, setPopoverVisible] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
+  const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
     const closeMenu = (e) => {
@@ -22,6 +24,11 @@ export const Layout = ({ children, halfScreen }) => {
         setOpenProfile(false);
       }
     };
+
+    getAvatars({uid}).then(avatarBlob => {
+      const objectURL = URL.createObjectURL(avatarBlob);
+      setAvatar(objectURL);
+  });
 
     document.addEventListener('click', closeMenu);
 
@@ -72,7 +79,7 @@ export const Layout = ({ children, halfScreen }) => {
                 : <>
                   <li
                     className="nav-item"
-                    style={{ position: 'relative', marginRight: '2rem' }}
+                    style={{ position: 'relative' }}
                     onMouseEnter={() => setPopoverVisible(true)}
                     onMouseLeave={() => setPopoverVisible(false)}
                   >
@@ -85,11 +92,16 @@ export const Layout = ({ children, halfScreen }) => {
                   </li>
 
                   <li className="nav-item dropDown" style={{ position: 'relative' }}>
-                    <a className="user-btn btn btn-light"
-                      style={{ color: 'black' }}
-                      onClick={() => setOpenProfile(!openProfile)}
-                    >
-                      {username}
+                    <a onClick={() => setOpenProfile(!openProfile)}>
+                      <img
+                        className='avatar'
+                        title={username}
+                        alt="avatar"
+                        src={avatar}
+                        width="80rem"
+                        height="80rem"
+                        style={{ borderRadius: '50%', backgroundColor: 'white', cursor: 'pointer'}}
+                      />
                     </a>
                     {openProfile &&
                       <div className="flex flex-col dropDownProfile">

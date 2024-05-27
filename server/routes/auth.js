@@ -1,11 +1,12 @@
 const { Router } = require('express');
-const { registerUser, loginUser, revalidateToken, updateUser, updatePassword, updatePoints, addPoints, updateTraceability, getPoints, getRanking } = require('../controllers/auth');
+const { registerUser, loginUser, deleteUser, revalidateToken, updateUser, updatePassword, updatePoints, addPoints, updateTraceability, getPoints, getRanking } = require('../controllers/auth');
 const { validateJWT } = require('../middlewares/validateJWT');
 
 const router = Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/deleteUser', deleteUser);
 router.post('/renew', validateJWT, revalidateToken);
 router.post('/updateUser', updateUser);
 router.post('/updatePoints', updatePoints);
