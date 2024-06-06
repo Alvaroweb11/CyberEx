@@ -10,7 +10,7 @@ router.post('/deleteUser', deleteUser);
 router.post('/renew', validateJWT, revalidateToken);
 router.post('/updateUser', updateUser);
 router.post('/updatePoints', updatePoints);
-router.post('/addPoints', addPoints);
+router.post('/addPoints', addPoints); // This is the one that will be used to update the points
 router.post('/updateTraceability', updateTraceability);
 router.post('/getPoints', getPoints);
 router.get('/getRanking', getRanking);

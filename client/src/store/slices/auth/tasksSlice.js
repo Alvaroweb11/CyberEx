@@ -5,19 +5,29 @@ export const tasksSlice = createSlice({
   initialState: {
     status: null,
     points: 0,
-    hashTask1: 0,
-    hashTask2: 0,
-    hashTask3: 0,
-    steganographyTask1: 0,
+    hashEasyTask1: 0,
+    hashEasyTask2: 0,
+    hashEasyTask3: 0,
+    hashHardTask1: 0,
+    hashHardTask2: 0,
+    steganographyEasyTask1: 0,
+    steganographyHardTask1: 0,
+    phishingEasyTask1: 0,
+    phishingHardTask1: 0,
   },
   reducers: {
     addPoints: (state, {payload}) => {
       state.status = "checked";
       state.points = payload.points;
-      state.hashTask1 = payload.hashTask1;
-      state.hashTask2 = payload.hashTask2;
-      state.hashTask3 = payload.hashTask3;
-      state.steganographyTask1 = payload.steganographyTask1;
+      state.hashEasyTask1 = payload.hashEasyTask1;
+      state.hashEasyTask2 = payload.hashEasyTask2;
+      state.hashEasyTask3 = payload.hashEasyTask3;
+      state.hashHardTask1 = payload.hashHardTask1;
+      state.hashHardTask2 = payload.hashHardTask2;
+      state.steganographyEasyTask1 = payload.steganographyEasyTask1;
+      state.steganographyHardTask1 = payload.steganographyHardTask1;
+      state.phishingEasyTask1 = payload.phishingEasyTask1;
+      state.phishingHardTask1 = payload.phishingHardTask1;
       localStorage.setItem('tasks', JSON.stringify(state));
     },
     updateTask: (state, action) => {

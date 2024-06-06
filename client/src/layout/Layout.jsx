@@ -56,7 +56,7 @@ export const Layout = ({ children, halfScreen }) => {
               <Header text="Aprender" icon="chalkboard-teacher" href="learn" />
               <Header text="Practicar" icon="briefcase" href="practice" />
               <Header text="Repositorio" icon="stream" href="repository" />
-              <Header text="Logros" icon="trophy" href="leaderboard" />
+              <Header text="Ranking" icon="trophy" href="leaderboard" />
             </ul>
           </div>
 
@@ -136,7 +136,7 @@ export const Layout = ({ children, halfScreen }) => {
                 <li><a href="/learn">Aprender</a></li>
                 <li><a href="/practice">Practicar</a></li>
                 <li><a href="/repository">Repositorio</a></li>
-                <li><a href="/achievements">Logros</a></li>
+                <li><a href="/leaderboard">Ranking</a></li>
               </ul>
             </div>
             <div className="col-md-4 col-lg-3">

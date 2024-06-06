@@ -7,9 +7,9 @@ import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
 import { updateTasks, updateTraceability } from "../store/slices/auth"
 
-export function PracticePageSteganographyHard() {
+export function PracticePageSteganographyEasy() {
     const { uid } = useSelector(state => state.auth);
-    const { points, steganographyHardTask1 } = useSelector(state => state.tasks);
+    const { points, steganographyEasyTask1 } = useSelector(state => state.tasks);
     const [point, setPoints] = useState(points);
 
     useEffect(() => {
@@ -18,12 +18,12 @@ export function PracticePageSteganographyHard() {
 
     const [isOpen1, setIsOpen1] = useState(false);
 
-    const [isAnswer1Correct, setIsAnswer1Correct] = useState(steganographyHardTask1);
+    const [isAnswer1Correct, setIsAnswer1Correct] = useState(steganographyEasyTask1);
     const [isAnswer1Hinted, setIsAnswer1Hinted] = useState(false);
 
     useEffect(() => {
-        setIsAnswer1Correct(steganographyHardTask1);
-    }, [steganographyHardTask1]);
+        setIsAnswer1Correct(steganographyEasyTask1);
+    }, [steganographyEasyTask1]);
 
     const { onChange, answer1 } = useForm({
         answer1: "",
@@ -31,12 +31,12 @@ export function PracticePageSteganographyHard() {
 
     const dispatch = useDispatch();
 
-    const [pointsTask1, setPointsTask1] = useState(200);
-    const [steganographyHardTask1Started, setSteganographyHardTask1Started] = useState(localStorage.getItem('steganographyHardTask1Started') === 'true');
+    const [pointsTask1, setPointsTask1] = useState(100);
+    const [steganographyEasyTask1Started, setSteganographyEasyTask1Started] = useState(localStorage.getItem('steganographyEasyTask1Started') === 'true');
     useEffect(() => {
         let task1Timer1;
         let task1Timer2;
-        if (steganographyHardTask1Started) {
+        if (steganographyEasyTask1Started) {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
                     setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
@@ -47,7 +47,7 @@ export function PracticePageSteganographyHard() {
             clearTimeout(task1Timer1);
             clearInterval(task1Timer2);
         };
-    }, [steganographyHardTask1Started, pointsTask1]);
+    }, [steganographyEasyTask1Started, pointsTask1]);
 
     const [machineStarted, setMachineStarted] = useState(false);
 
@@ -135,8 +135,8 @@ export function PracticePageSteganographyHard() {
                                                 className="btn btn-success start-btn"
                                                 disabled={isAnswer1Correct || machineStarted}
                                                 onClick={() => {
-                                                    setSteganographyHardTask1Started(true);
-                                                    localStorage.setItem('steganographyHardTask1Started', 'true');
+                                                    setSteganographyEasyTask1Started(true);
+                                                    localStorage.setItem('steganographyEasyTask1Started', 'true');
                                                     setMachineStarted(true);
                                                 }}>
                                                 <i className="fas fa-play mr-2"></i> Start Machine
@@ -216,8 +216,8 @@ export function PracticePageSteganographyHard() {
                                                                 })
                                                             }
                                                             setIsAnswer1Correct(true);
-                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, steganographyHardTask1: 1 }))
-                                                            dispatch(updateTraceability({ uid, steganographyHardTask1: pointsTask1 }))
+                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, steganographyEasyTask1: 1 }))
+                                                            dispatch(updateTraceability({ uid, steganographyEasyTask1: pointsTask1 }))
                                                             setPoints(point => point + pointsTask1);
                                                             Swal.fire({
                                                                 icon: 'success',

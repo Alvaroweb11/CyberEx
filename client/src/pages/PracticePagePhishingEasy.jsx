@@ -7,9 +7,9 @@ import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
 import { updateTasks, updateTraceability } from "../store/slices/auth"
 
-export function PracticePageSteganographyHard() {
+export function PracticePagePhishingEasy() {
     const { uid } = useSelector(state => state.auth);
-    const { points, steganographyHardTask1 } = useSelector(state => state.tasks);
+    const { points, phishingEasyTask1 } = useSelector(state => state.tasks);
     const [point, setPoints] = useState(points);
 
     useEffect(() => {
@@ -18,12 +18,12 @@ export function PracticePageSteganographyHard() {
 
     const [isOpen1, setIsOpen1] = useState(false);
 
-    const [isAnswer1Correct, setIsAnswer1Correct] = useState(steganographyHardTask1);
+    const [isAnswer1Correct, setIsAnswer1Correct] = useState(phishingEasyTask1);
     const [isAnswer1Hinted, setIsAnswer1Hinted] = useState(false);
 
     useEffect(() => {
-        setIsAnswer1Correct(steganographyHardTask1);
-    }, [steganographyHardTask1]);
+        setIsAnswer1Correct(phishingEasyTask1);
+    }, [phishingEasyTask1]);
 
     const { onChange, answer1 } = useForm({
         answer1: "",
@@ -31,12 +31,13 @@ export function PracticePageSteganographyHard() {
 
     const dispatch = useDispatch();
 
-    const [pointsTask1, setPointsTask1] = useState(200);
-    const [steganographyHardTask1Started, setSteganographyHardTask1Started] = useState(localStorage.getItem('steganographyHardTask1Started') === 'true');
+    const [pointsTask1, setPointsTask1] = useState(100);
+    const [phishingEasyTask1Started, setPhishingEasyTask1Started] = useState(localStorage.getItem('phishingEasyTask1Started') === 'true');
+
     useEffect(() => {
         let task1Timer1;
         let task1Timer2;
-        if (steganographyHardTask1Started) {
+        if (phishingEasyTask1Started) {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
                     setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
@@ -47,7 +48,7 @@ export function PracticePageSteganographyHard() {
             clearTimeout(task1Timer1);
             clearInterval(task1Timer2);
         };
-    }, [steganographyHardTask1Started, pointsTask1]);
+    }, [phishingEasyTask1Started, pointsTask1]);
 
     const [machineStarted, setMachineStarted] = useState(false);
 
@@ -81,39 +82,12 @@ export function PracticePageSteganographyHard() {
 
                         <div className="home-break"></div>
 
-                        {
-                            (machineStarted) && (
-                                <div className="card" id="machine-info" style={{ marginBottom: "15px", textAlign: "center" }}>
-                                    <div className="card-header">
-                                        <span className="task-dropdown-text text-white">Machine Information</span>
-                                    </div>
-
-                                    <div className="card-body row">
-                                        <div className="col-md-3 mr-3">
-                                            <p style={{ fontWeight: "bold" }}>Expires</p>
-                                            <p>{Math.floor(timeLeft / 3600)}h {Math.floor((timeLeft % 3600) / 60)}m {timeLeft % 60}s</p>
-                                        </div>
-
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline-secondary col-md-4"
-                                            onClick={() => { setTimeLeft(prevTime => prevTime + 60 * 60 >= 7200 ? 10800 : prevTime + 60 * 60); }}>
-                                            Add 1 hour
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger col-md-4 ml-3"
-                                            onClick={() => { setMachineStarted(false); }}>
-                                            Terminate
-                                        </button>
-                                    </div>
-                                </div>
-                            )
-                        }
-
                         <div className="card" id="task-1" style={{ marginBottom: "15px" }}>
-                            <div className="card-header" role="button" onClick={() => setIsOpen1(!isOpen1)}>
+                            <div className="card-header" role="button" onClick={() => {
+                                setIsOpen1(!isOpen1);
+                                setPhishingEasyTask1Started(true);
+                                localStorage.setItem('phishingEasyTask1Started', 'true');
+                            }}>
                                 <div className="card-link">
                                     <span className="task-dropdown-title">
                                         <span className={`task-dropdown-text ${isAnswer1Correct ? 'text-green' : 'text-red'}`}>Task 1</span>
@@ -121,7 +95,7 @@ export function PracticePageSteganographyHard() {
                                             <i className={`far ${isAnswer1Correct ? 'fa-check-circle text-green' : 'fa-circle text-lgray'}`}></i>
                                         </span>
                                     </span>
-                                    <span className="exercise-text">Steganography</span>
+                                    <span className="exercise-text">Detección de Phishing</span>
                                     <i className="fas fa-chevron-down float-right"></i>
                                 </div>
                             </div>
@@ -130,34 +104,29 @@ export function PracticePageSteganographyHard() {
                                 <div className="card-container">
                                     <div className="card-body">
                                         <div className="room-task-desc">
-                                            <button
-                                                type="button"
-                                                className="btn btn-success start-btn"
-                                                disabled={isAnswer1Correct || machineStarted}
-                                                onClick={() => {
-                                                    setSteganographyHardTask1Started(true);
-                                                    localStorage.setItem('steganographyHardTask1Started', 'true');
-                                                    setMachineStarted(true);
-                                                }}>
-                                                <i className="fas fa-play mr-2"></i> Start Machine
-                                            </button>
+                                            <p style={{ textAlign: "justify", marginBottom: "10px" }}>
+                                                A continuación se muestra un correo electrónico que podría ser sospechoso de ser un intento de phishing. Identifica algún elemento que indique que este es un correo fraudulento:
+                                            </p>
 
-                                            <p style={{ textAlign: "justify", marginBottom: "25px" }}>
-                                                La dirección de un Hospital tiene sospechas de que un Jefe de Servicio está enviando
-                                                información confidencial de la misma a terceras personas ajenas a la entidad hospitalaria de
-                                                forma codificada utilizando quizás algún método relacionado con la esteganografía. Hemos
-                                                recibido una de las imágenes enviada (ver archivo adjunto “Dibujo.bmp”) sobre la que se cree
-                                                existe información confidencial oculta.
+                                            <p style={{ textAlign: "justify", marginBottom: "10px", fontFamily: "monospace", backgroundColor: "#f8f9fa", padding: "10px", borderRadius: "5px" }}>
+                                                <b>De:</b> soporte@microrsoft.com<br />
+                                                <b>Asunto:</b> Acción requerida: Verifica tu cuenta<br />
+                                                <b>Mensaje:</b><br />
+                                                Estimado usuario,<br /><br />
+                                                Hemos detectado actividades sospechosas en tu cuenta de Microsoft. Por favor, haz clic en el siguiente enlace para verificar tu cuenta:<br />
+                                                <a href="https://support.microsoft.com" style={{ color: "blue" }}>https://support.microsoft.com</a><br /><br />
+                                                Gracias,<br />
+                                                Equipo de Soporte de Microsoft
                                             </p>
                                         </div>
 
                                         <div className="card-questions vertical-align-custom text-lgray">
-                                            <div>Answer the questions below</div>
+                                            <div>Responde las siguientes preguntas</div>
                                         </div>
 
                                         <div className="card-answer">
                                             <p style={{ textAlign: "justify", marginTop: "10px", marginBottom: "10px" }}>
-                                                Determina el nombre del archivo oculto en la imagen:
+                                                Introduce el elemento identificado:
                                             </p>
 
                                             <div className="card-answer-input row">
@@ -168,7 +137,7 @@ export function PracticePageSteganographyHard() {
                                                         onChange={onChange}
                                                         type="text"
                                                         name="answer1"
-                                                        placeholder={`${isAnswer1Correct ? 'a5fde.jpg' : 'Answer format: *****.***'}`}
+                                                        placeholder={`${isAnswer1Correct ? 'soporte@microrsoft.com' : 'Answer format: **********************'}`}
                                                         disabled={isAnswer1Correct}
                                                     />
                                                 </div>
@@ -183,7 +152,7 @@ export function PracticePageSteganographyHard() {
                                                                 return Swal.fire({
                                                                     icon: 'info',
                                                                     title: 'Pista',
-                                                                    text: 'La extensión del archivo obtenido puede ser la de un archivo comprimido'
+                                                                    text: 'Revisa la dirección de correo electrónico.'
                                                                 })
                                                             }
                                                             if (pointsTask1 < 20) {
@@ -194,7 +163,7 @@ export function PracticePageSteganographyHard() {
                                                             Swal.fire({
                                                                 icon: 'info',
                                                                 title: 'Pista',
-                                                                text: 'La extensión del archivo obtenido puede ser la de un archivo comprimido'
+                                                                text: 'Revisa la dirección de correo electrónico.'
                                                             })
                                                             setIsAnswer1Hinted(true);
                                                         }}
@@ -209,15 +178,15 @@ export function PracticePageSteganographyHard() {
                                                         className={`btn ${isAnswer1Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer1Correct}
                                                         onClick={() => {
-                                                            if (answer1 !== "a5fde.jpg") {
+                                                            if (answer1 !== "soporte@microrsoft.com") {
                                                                 return Swal.fire({
                                                                     icon: 'error',
                                                                     title: 'Respuesta incorrecta'
                                                                 })
                                                             }
                                                             setIsAnswer1Correct(true);
-                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, steganographyHardTask1: 1 }))
-                                                            dispatch(updateTraceability({ uid, steganographyHardTask1: pointsTask1 }))
+                                                            dispatch(updateTasks({ uid, points: point + pointsTask1, phishingEasyTask1: 1 }))
+                                                            dispatch(updateTraceability({ uid, phishingEasyTask1: pointsTask1 }))
                                                             setPoints(point => point + pointsTask1);
                                                             Swal.fire({
                                                                 icon: 'success',
@@ -242,21 +211,6 @@ export function PracticePageSteganographyHard() {
                     </div>
                 </Layout>
             </div>
-
-            {
-                (machineStarted) && (
-                    <div style={{ position: 'fixed', right: 0, width: '50%', height: '100vh' }}>
-                        <iframe
-                            title="Interfaz del SO"
-                            src="https://localhost:6901"
-                            width="100%"
-                            height="100%"
-                            style={{ border: 'none' }}
-                            allowFullScreen
-                        ></iframe>
-                    </div>
-                )
-            }
 
         </div>
     )

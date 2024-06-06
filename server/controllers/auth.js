@@ -42,8 +42,8 @@ const registerUser = async (req, res = response) => {
         const passwordHash = bcrypt.hashSync(password, salt);
 
         const result = await query('INSERT INTO usuarios (username, email, password) VALUES (?, ?, ?)', [username, email, passwordHash]);
-        await query('INSERT INTO ejercicios (idUser, points, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0, 0]);
-        await query('INSERT INTO trazabilidad (idUser, hashTask1, hashTask2, hashTask3, steganographyTask1) VALUES (?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0]);
+        await query('INSERT INTO ejercicios (idUser, points, hashEasyTask1, hashEasyTask2, hashEasyTask3, hashHardTask1, hashHardTask2, steganographyEasyTask1, steganographyhardTask1, phishingEasyTask1, phishingHardTask1) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        await query('INSERT INTO trazabilidad (idUser, hashEasyTask1, hashEasyTask2, hashEasyTask3, hashHardTask1, hashHardTask2, steganographyEasyTask1, steganographyhardTask1, phishingEasyTask1, phishingHardTask1) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [result.insertId, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
         // Generar JWT
         const token = await generateJWT(result.insertId, username);
@@ -334,10 +334,15 @@ const updatePoints = async (req, res = response) => {
         res.status(201).json({
             ok: true,
             points: req.body.points,
-            hashTask1: req.body.hashTask1,
-            hashTask2: req.body.hashTask2,
-            hashTask3: req.body.hashTask3,
-            steganographyTask1: req.body.steganographyTask1,
+            hashEasyTask1: req.body.hashEasyTask1,
+            hashEasyTask2: req.body.hashEasyTask2,
+            hashEasyTask3: req.body.hashEasyTask3,
+            hashHardTask1: req.body.hashHardTask1,
+            hashHardTask2: req.body.hashHardTask2,
+            steganographyEasyTask1: req.body.steganographyEasyTask1,
+            steganographyHardTask1: req.body.steganographyHardTask1,
+            phishingEasyTask1: req.body.phishingEasyTask1,
+            phishingHardTask1: req.body.phishingHardTask1,
             msg: 'Puntos actualizados'
         })
 
@@ -453,10 +458,15 @@ const getPoints = async (req, res = response) => {
         res.status(201).json({
             ok: true,
             points: user.points,
-            hashTask1: user.hashTask1,
-            hashTask2: user.hashTask2,
-            hashTask3: user.hashTask3,
-            steganographyTask1: user.steganographyTask1,
+            hashEasyTask1: user.hashEasyTask1,
+            hashEasyTask2: user.hashEasyTask2,
+            hashEasyTask3: user.hashEasyTask3,
+            hashHardTask1: user.hashHardTask1,
+            hashHardTask2: user.hashHardTask2,
+            steganographyEasyTask1: user.steganographyEasyTask1,
+            steganographyHardTask1: user.steganographyHardTask1,
+            phishingEasyTask1: user.phishingEasyTask1,
+            phishingHardTask1: user.phishingHardTask1
         })
 
         connection.end();

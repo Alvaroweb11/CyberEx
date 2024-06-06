@@ -16,11 +16,10 @@ export function HomePage() {
                 <div className="home-break"></div>
                 <div className="row vertical-align-custom">
                     <div className="col-sm-7">
-                        <h3 className="bold-header">Aprende y compite</h3>
+                        <h3 className="bold-header size-18">Aprende y compite</h3>
                         <div className="titleunderline"></div>
                         <p className="text-lgray size-18">Aprender ciberseguridad también puede ser divertido. Completa los
-                            objetivos
-                            y obtén puntos para escalar posiciones en el ranking.</p>
+                            objetivos y obtén puntos para escalar posiciones en el ranking.</p>
                     </div>
                     <div className="col-sm-5">
                         <img src="/images/1.jpeg" style={{width:'100%'}} />
@@ -32,7 +31,7 @@ export function HomePage() {
                         <img src="/images/2.jpg" style={{width:'100%'}} />
                     </div>
                     <div className="col-sm-7">
-                        <h3 className="bold-header">Elige tu camino</h3>
+                        <h3 className="bold-header size-18">Elige tu camino</h3>
                         <div className="titleunderline"></div>
                         <p className="text-lgray size-18">Toma tu camino preferido en la ciberseguridad y mejora tus habilidades en
                             simulaciones realistas realizando tareas guiadas y desafíos donde poner a prueba lo aprendido.

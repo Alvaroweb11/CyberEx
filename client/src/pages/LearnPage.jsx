@@ -1,5 +1,6 @@
 import '../css/style.css';
 import { Layout } from "../layout/Layout"
+import { TeoryList } from "../components/TeoryList"
 
 export function LearnPage() {
     return (
@@ -8,9 +9,7 @@ export function LearnPage() {
 
             <div className="container main">
                 <div className="home-break"></div>
-
-                <h1 style={{textAlign: "center", fontSize: "100px", fontWeight: "bold" }}>PROXIMAMENTE</h1>               
-                
+                <TeoryList />
                 <div className="home-break"></div>
             </div>
         </Layout>

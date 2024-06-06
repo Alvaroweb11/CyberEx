@@ -2,7 +2,6 @@
 
 html {
   --logged-out-bg: #111b29;
-  /* 111b29 091b35 18283e */
 }
 
 .user-btn {
@@ -26,7 +25,6 @@ html {
 }
 
 .user-btn:hover {
-  /* Quiero que cuando pase el cursor se ponga un borde */
   box-shadow: 0 0 0 3px #676767;
 }
 
@@ -80,6 +78,10 @@ body {
   color: rgba(255, 255, 255, 0.75);
 }
 
+.bold-header {
+  font-weight: bold;
+}
+
 .titleunderline {
   display: inline-block;
   width: 90px;
@@ -112,7 +114,6 @@ body {
   padding: 0;
   margin: 0;
   background: #161e2d;
-  /* 1f2427 */
   border-radius: 0rem;
   color: white;
   width: 100%;
@@ -125,7 +126,6 @@ body {
   padding: 0;
   margin: 0;
   background: #161e2d;
-  /* 1f2427 */
   border-radius: 0rem;
   color: white;
   width: 100%;
@@ -243,28 +243,20 @@ body {
   width: 100%;
 }
 
-/* Esto aplica a todas las barras de desplazamiento */
 ::-webkit-scrollbar {
   width: 10px;
-  /* Ancho de la barra de desplazamiento */
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-  /* Color de fondo de la barra de desplazamiento */
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
-  /* Color de la barra de desplazamiento */
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-  /* Color de la barra de desplazamiento al pasar el mouse */
 }
 
 :root {
@@ -322,8 +314,6 @@ body {
 }
 
 #profile {
-  /* display: flex; */
-
   margin-top: 3em;
 }
 
@@ -356,7 +346,6 @@ body {
 .podium {
   display: flex;
   justify-content: center;
-  /* gap: 20px; */
 }
 
 .place1,
@@ -424,7 +413,6 @@ body {
   border-collapse: collapse;
   width: 80%;
   table-layout: fixed;
-  /* Nueva propiedad */
 }
 
 .ranking-table th,
@@ -433,7 +421,6 @@ body {
   padding: 8px;
   text-align: center;
   width: 33%;
-  /* Nueva propiedad */
 }
 
 .ranking-table th {
@@ -460,7 +447,6 @@ body {
 
 .upload-icon-container label {
   font-size: 0.8em;
-  /* Ajusta este valor según tus necesidades */
 }
 
 .own-repository-table {
@@ -564,10 +550,7 @@ body {
 
 .repository-table td button:hover {
   background-color: #ddd;
-  /* Cambia esto al color que prefieras */
   color: #0000FF;
-  ;
-  /* Cambia esto al color que prefieras para el texto */
   cursor: pointer;
 }
 
