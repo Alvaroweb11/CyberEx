@@ -45,11 +45,9 @@ export function AdminRepositoryPage() {
         try {
             await approveAdminFiles({ username, fileName, selectedCategory, selectedDifficulty });
 
-            // Añadir puntos al usuario
             const points = formatPoints(selectedDifficulty);
             await addPoints({ username, points });
 
-            // Volver a buscar los archivos del servidor después de la eliminación
             const data = await getAdminFiles();
             setFiles(data.files);
         } catch (error) {
@@ -61,7 +59,6 @@ export function AdminRepositoryPage() {
         try {
             await deleteAdminFiles({ username, fileName });
 
-            // Volver a buscar los archivos del servidor después de la eliminación
             const data = await getAdminFiles();
             setFiles(data.files);
         } catch (error) {

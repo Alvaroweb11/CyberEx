@@ -63,8 +63,8 @@ export function PracticePageHashEasy() {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
                     setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
+                }, 60000);
+            }, 600000);
         }
         return () => {
             clearTimeout(task1Timer1);
@@ -79,8 +79,8 @@ export function PracticePageHashEasy() {
             task2Timer1 = setTimeout(() => {
                 task2Timer2 = setInterval(() => {
                     setPointsTask2((pointsTask2) => pointsTask2 > 0 ? pointsTask2 - 1 : 0);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
+                }, 60000);
+            }, 600000);
         }
         return () => {
             clearTimeout(task2Timer1);
@@ -95,8 +95,8 @@ export function PracticePageHashEasy() {
             task3Timer1 = setTimeout(() => {
                 task3Timer2 = setInterval(() => {
                     setPointsTask3((pointsTask3) => pointsTask3 > 0 ? pointsTask3 - 1 : 0);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
+                }, 60000);
+            }, 600000);
         }
         return () => {
             clearTimeout(task3Timer1);
@@ -106,7 +106,7 @@ export function PracticePageHashEasy() {
 
     const [machineStarted, setMachineStarted] = useState(false);
 
-    const [timeLeft, setTimeLeft] = useState(60 * 60); // Tiempo en segundos
+    const [timeLeft, setTimeLeft] = useState(60 * 60);
 
     useEffect(() => {
         if (machineStarted && timeLeft > 0) {
@@ -114,7 +114,7 @@ export function PracticePageHashEasy() {
                 setTimeLeft(timeLeft - 1);
             }, 1000);
 
-            return () => clearTimeout(timerId); // Limpiar el temporizador si el componente se desmonta
+            return () => clearTimeout(timerId);
         } else if (timeLeft === 0) {
             setMachineStarted(false);
         }
@@ -122,7 +122,7 @@ export function PracticePageHashEasy() {
 
     useEffect(() => {
         if (machineStarted) {
-            setTimeLeft(60 * 60); // Restablecer el contador a 1 hora
+            setTimeLeft(60 * 60);
         }
     }, [machineStarted]);
 
@@ -241,7 +241,7 @@ export function PracticePageHashEasy() {
                                                         </tr>
                                                         <tr>
                                                             <td>sarah_jones</td>
-                                                            <td>c938ab5fbf3d5e17a9cd57c33e2ee2fd90a733df</td>
+                                                            <td>62d845788bc5fc27f0b114f5d265b2354abe4ff0</td>
                                                         </tr>
                                                         <tr>
                                                             <td>john_doe</td>
@@ -269,7 +269,7 @@ export function PracticePageHashEasy() {
                                                         onChange={onChange}
                                                         type="text"
                                                         name="answer1"
-                                                        placeholder={`${isAnswer1Correct ? 'CyberEx' : 'Answer format: *******'}`}
+                                                        placeholder={`${isAnswer1Correct ? 'CyberWeb' : 'Answer format: ********'}`}
                                                         disabled={isAnswer1Correct}
                                                     />
                                                 </div>
@@ -310,7 +310,7 @@ export function PracticePageHashEasy() {
                                                         className={`btn ${isAnswer1Correct ? 'btn-success' : 'btn-outline-success'}`}
                                                         disabled={isAnswer1Correct}
                                                         onClick={() => {
-                                                            if (answer1 !== "CyberEx") {
+                                                            if (answer1 !== "CyberWeb") {
                                                                 return Swal.fire({
                                                                     icon: 'error',
                                                                     title: 'Respuesta incorrecta'

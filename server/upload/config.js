@@ -11,7 +11,6 @@ const uploadFiles = async (req, res) => {
         const { uid } = req.body;
         const file = req.files.file;
 
-        // Verifica la extensión del archivo
         const ext = path.extname(file.name);
         const allowedExtensions = ['.rar', '.zip', '.tar.gz'];
 
@@ -19,7 +18,6 @@ const uploadFiles = async (req, res) => {
             return res.status(412).json({ msg: 'Invalid file extension' });
         }
 
-        // Construye una ruta al directorio 'repository'
         const uploadDir = path.resolve(__dirname, '..', '..', 'repository', 'admin');
 
         const uploadPath = path.join(uploadDir, uid, file.name);
@@ -53,7 +51,6 @@ const getFiles = async (req, res) => {
         const baseDir = path.resolve(__dirname, '..', '..', 'repository');
         let userDirs = await fs.promises.readdir(baseDir);
 
-        // Filtrar directorios que no son numéricos
         userDirs = userDirs.filter(dir => !isNaN(dir));
 
         const allFiles = [];
@@ -160,21 +157,15 @@ const deleteFiles = async (req, res) => {
 
         fs.unlinkSync(filePath);
 
-        // Comprobar si la carpeta de dificultad está vacía
         if (fs.readdirSync(difficultyDir).length === 0) {
-            // Si está vacía, eliminar la carpeta
             fs.rmdirSync(difficultyDir);
         }
 
-        // Comprobar si la carpeta de categoría está vacía
         if (fs.readdirSync(categoryDir).length === 0) {
-            // Si está vacía, eliminar la carpeta
             fs.rmdirSync(categoryDir);
         }
 
-        // Comprobar si la carpeta de usuario está vacía
         if (fs.readdirSync(userDir).length === 0) {
-            // Si está vacía, eliminar la carpeta
             fs.rmdirSync(userDir);
         }
 
@@ -214,7 +205,6 @@ const getAdminFiles = async (req, res) => {
         const baseDir = path.resolve(__dirname, '..', '..', 'repository', 'admin');
         let userDirs = await fs.promises.readdir(baseDir);
 
-        // Filtrar directorios que no son numéricos
         userDirs = userDirs.filter(dir => !isNaN(dir));
 
         const allFiles = [];
@@ -268,9 +258,7 @@ const approveAdminFiles = async (req, res) => {
             }
             fs.renameSync(filePath, destPath);
 
-            // Comprobar si la carpeta está vacía
             if (fs.readdirSync(userDir).length === 0) {
-                // Si está vacía, eliminar la carpeta
                 fs.rmdirSync(userDir);
             }
 
@@ -302,9 +290,7 @@ const deleteAdminFiles = async (req, res) => {
 
         fs.unlinkSync(filePath);
 
-        // Comprobar si la carpeta está vacía
         if (fs.readdirSync(userDir).length === 0) {
-            // Si está vacía, eliminar la carpeta
             fs.rmdirSync(userDir);
         }
 
@@ -348,7 +334,6 @@ const uploadAvatars = async (req, res) => {
         const { uid } = req.body;
         const file = req.files.file;
 
-        // Verifica la extensión del archivo
         const ext = path.extname(file.name);
         const allowedExtensions = ['.png', '.jpg', '.jpeg'];
 
@@ -356,10 +341,8 @@ const uploadAvatars = async (req, res) => {
             return res.status(412).json({ msg: 'Invalid file extension' });
         }
 
-        // Construye una ruta al directorio 'avatars'
         const uploadDir = path.resolve(__dirname, '..', '..', 'repository', 'avatars');
 
-        // Elimina cualquier archivo previo con el mismo nombre pero con una extensión diferente
         for (let oldExt of allowedExtensions) {
             const oldPath = path.join(uploadDir, `${uid}${oldExt}`);
             if (fs.existsSync(oldPath)) {

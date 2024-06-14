@@ -55,7 +55,6 @@ export function MyRepositoryPage() {
         try {
             await deleteFiles({ uid, fileName, category, difficulty });
 
-            // Actualizar la lista de archivos después de la eliminación
             const data = await getOwnFiles({ uid });
             setFiles(data.files);
         } catch (error) {

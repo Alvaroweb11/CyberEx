@@ -52,8 +52,8 @@ export function PracticePageHashHard() {
             task1Timer1 = setTimeout(() => {
                 task1Timer2 = setInterval(() => {
                     setPointsTask1((pointsTask1) => pointsTask1 > 0 ? pointsTask1 - 1 : 0);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
+                }, 60000);
+            }, 600000);
         }
         return () => {
             clearTimeout(task1Timer1);
@@ -68,8 +68,8 @@ export function PracticePageHashHard() {
             task2Timer1 = setTimeout(() => {
                 task2Timer2 = setInterval(() => {
                     setPointsTask2((pointsTask2) => pointsTask2 > 0 ? pointsTask2 - 1 : 0);
-                }, 60000); // 1 minute in milliseconds
-            }, 600000); // 10 minutes in milliseconds
+                }, 60000);
+            }, 600000);
         }
         return () => {
             clearTimeout(task2Timer1);
@@ -79,7 +79,7 @@ export function PracticePageHashHard() {
 
     const [machineStarted, setMachineStarted] = useState(false);
 
-    const [timeLeft, setTimeLeft] = useState(60 * 60); // Tiempo en segundos
+    const [timeLeft, setTimeLeft] = useState(60 * 60);
 
     useEffect(() => {
         if (machineStarted && timeLeft > 0) {
@@ -87,7 +87,7 @@ export function PracticePageHashHard() {
                 setTimeLeft(timeLeft - 1);
             }, 1000);
 
-            return () => clearTimeout(timerId); // Limpiar el temporizador si el componente se desmonta
+            return () => clearTimeout(timerId);
         } else if (timeLeft === 0) {
             setMachineStarted(false);
         }
@@ -95,7 +95,7 @@ export function PracticePageHashHard() {
 
     useEffect(() => {
         if (machineStarted) {
-            setTimeLeft(60 * 60); // Restablecer el contador a 1 hora
+            setTimeLeft(60 * 60);
         }
     }, [machineStarted]);
 

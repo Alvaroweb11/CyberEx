@@ -7,7 +7,6 @@ export const downloadAdminFiles = async ({ username, fileName }) => {
         body: JSON.stringify({ username, fileName }),
     });
 
-    // Crea un nuevo objeto de respuesta con el mismo cuerpo
     const blobResponse = new Response(response.body);
     const data = await blobResponse.blob();
     return data;
