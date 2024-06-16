@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { getRegister, getLogin, getRenewToken, getUpdateTasks, getPoints, getUpdateTraceability, getUpdateUser } from "../../../utils";
+import { getRegister, getLogin, getRenewToken, getUpdateTasks, getPoints, getUpdateTraceability, getUpdateUser, getStartMachine, getRemoveMachine } from "../../../utils";
 import { checkingCredentials, login, logout } from "./authSlice";
 import { addPoints, updateTask } from "./tasksSlice";
 
@@ -71,5 +71,17 @@ export const updateUser = ({ uid, email, fullName, username }) => {
     if (result.ok) {
       Swal.fire('¡Éxito!', 'Usuario actualizado correctamente', 'success');
     }
+  }
+}
+
+export const startMachine = () => {
+  return async () => {
+    await getStartMachine();
+  }
+}
+
+export const removeMachine = () => {
+  return async () => {
+    await getRemoveMachine();
   }
 }

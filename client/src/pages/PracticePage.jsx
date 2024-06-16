@@ -19,7 +19,9 @@ export function PracticePage() {
                            <p>Tras 10 minutos, la puntuación bajará 1 CP por minuto.</p>
                            <p>El tiempo comienza a correr al iniciar la máquina.</p>
                            <br>
-                           <p>Puedes canjear pistas por 20 CP.</p>`,
+                           <p>Puedes canjear pistas por 20 CP.</p>
+                           <br>
+                           <p>(La constraseña para las máquinas es: CyberWeb)</p>`,
                     icon: 'info',
                     confirmButtonText: 'Entendido'
                 });

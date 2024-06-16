@@ -5,7 +5,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import { useForm } from "../hooks/useForm"
 import Swal from 'sweetalert2'
 import { useSelector, useDispatch } from "react-redux";
-import { updateTasks, updateTraceability } from "../store/slices/auth"
+import { updateTasks, updateTraceability, startMachine, removeMachine } from "../store/slices/auth"
 
 export function PracticePageHashHard() {
     const { uid } = useSelector(state => state.auth);
@@ -90,6 +90,7 @@ export function PracticePageHashHard() {
             return () => clearTimeout(timerId);
         } else if (timeLeft === 0) {
             setMachineStarted(false);
+            dispatch(removeMachine());
         }
     }, [machineStarted, timeLeft]);
 
@@ -132,7 +133,10 @@ export function PracticePageHashHard() {
                                         <button
                                             type="button"
                                             className="btn btn-danger col-md-4 ml-3"
-                                            onClick={() => { setMachineStarted(false); }}>
+                                            onClick={() => { 
+                                                setMachineStarted(false);
+                                                dispatch(removeMachine());
+                                            }}>
                                             Terminate
                                         </button>
                                     </div>
@@ -165,6 +169,7 @@ export function PracticePageHashHard() {
                                                 onClick={() => {
                                                     setHashHardTask1Started(true);
                                                     localStorage.setItem('task1Started', 'true');
+                                                    dispatch(startMachine());
                                                     setMachineStarted(true);
                                                 }}>
                                                 <i className="fas fa-play mr-2"></i> Start Machine
@@ -307,6 +312,7 @@ export function PracticePageHashHard() {
                                                                 timer: 2500
                                                             })
                                                             setMachineStarted(false);
+                                                            dispatch(removeMachine());
                                                         }}>
                                                         {isAnswer1Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}
                                                     </button>
@@ -343,6 +349,7 @@ export function PracticePageHashHard() {
                                                 onClick={() => {
                                                     setHashHardTask2Started(true);
                                                     localStorage.setItem('task2Started', 'true');
+                                                    dispatch(startMachine());
                                                     setMachineStarted(true);
                                                 }}>
                                                 <i className="fas fa-play mr-2"></i> Start Machine
@@ -470,6 +477,7 @@ export function PracticePageHashHard() {
                                                                 timer: 2500
                                                             })
                                                             setMachineStarted(false);
+                                                            dispatch(removeMachine());
                                                         }}>
                                                         {isAnswer2Correct ? 'Correcto' : <><i className="far fa-paper-plane"></i> Submit</>}
                                                     </button>
@@ -491,7 +499,7 @@ export function PracticePageHashHard() {
                     <div style={{ position: 'fixed', right: 0, width: '50%', height: '100vh' }}>
                         <iframe
                             title="Interfaz del SO"
-                            src="https://localhost:6901"
+                            src="http://podman:6080/vnc.html?host=podman&port=6080"
                             width="100%"
                             height="100%"
                             style={{ border: 'none' }}

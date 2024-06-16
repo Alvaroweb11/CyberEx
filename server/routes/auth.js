@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { registerUser, loginUser, deleteUser, revalidateToken, updateUser, updatePassword, updatePoints, addPoints, updateTraceability, getPoints, getRanking } = require('../controllers/auth');
+const { registerUser, loginUser, deleteUser, revalidateToken, updateUser, updatePassword, updatePoints, addPoints, updateTraceability, getPoints, getRanking, getStartMachine, getRemoveMachine } = require('../controllers/auth');
 const { validateJWT } = require('../middlewares/validateJWT');
 
 const router = Router();
@@ -15,5 +15,7 @@ router.post('/updateTraceability', updateTraceability);
 router.post('/getPoints', getPoints);
 router.get('/getRanking', getRanking);
 router.post('/updatePassword', updatePassword);
+router.get('/getStartMachine', getStartMachine)
+router.get('/getRemoveMachine', getRemoveMachine);
 
 module.exports = router;

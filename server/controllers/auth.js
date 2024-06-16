@@ -4,6 +4,7 @@ const { generateJWT } = require('../helpers/generateJWT');
 require('dotenv').config();
 const mysql = require('mysql');
 const util = require('util');
+const { exec } = require('child_process');
 
 const registerUser = async (req, res = response) => {
 
@@ -542,6 +543,52 @@ async function getUserId(username) {
     return rows[0] ? rows[0].id : -1;
 }
 
+async function getStartMachine(req, res) {
+    try {
+        const command = 'podman run -d --rm -p 5901:5901 --name kali-gui kali-gui';
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing command: ${error}`);
+            }
+            if (stderr) {
+                console.error(`stderr: ${stderr}`);
+            }
+            console.log(`stdout: ${stdout}`);
+            res.json({ 
+                ok: true,
+                msg: 'Command executed successfully'
+            });
+        });
+    } catch (err) {
+        console.error(`Caught exception: ${err}`);
+        res.status(500).json({ error: `Caught exception: ${err.message}` });
+    }
+}
+
+async function getRemoveMachine(req, res) {
+    try {
+        const command = 'podman stop kali-gui';
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing command: ${error}`);
+            }
+            if (stderr) {
+                console.error(`stderr: ${stderr}`);
+            }
+            console.log(`stdout: ${stdout}`);
+            res.json({ 
+                ok: true,
+                msg: 'Command executed successfully'
+            });
+        });
+    } catch (err) {
+        console.error(`Caught exception: ${err}`);
+        res.status(500).json({ error: `Caught exception: ${err.message}` });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -555,5 +602,7 @@ module.exports = {
     getPoints,
     getRanking,
     getUserName,
-    getUserId
+    getUserId,
+    getStartMachine,
+    getRemoveMachine
 }

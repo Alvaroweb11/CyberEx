@@ -20,3 +20,5 @@ export * from "./uploadAvatars";
 export * from "./getAvatars";
 export * from "./updatePassword";
 export * from "./deleteUser";
+export * from "./getStartMachine"
+export * from "./getRemoveMachine"
