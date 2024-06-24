@@ -254,7 +254,7 @@ export function PracticePageSteganographyEasy() {
                     <div style={{ position: 'fixed', right: 0, width: '50%', height: '100vh' }}>
                         <iframe
                             title="Interfaz del SO"
-                            src="http://podman:6080/vnc.html?host=podman&port=6080"
+                            src="http://cyberex:6080/vnc.html?host=cyberex&port=6080"
                             width="100%"
                             height="100%"
                             style={{ border: 'none' }}

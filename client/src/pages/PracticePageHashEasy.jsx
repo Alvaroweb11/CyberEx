@@ -246,7 +246,7 @@ export function PracticePageHashEasy() {
                                                         </tr>
                                                         <tr>
                                                             <td>sarah_jones</td>
-                                                            <td>62d845788bc5fc27f0b114f5d265b2354abe4ff0</td>
+                                                            <td>c938ab5fbf3d5e17a9cd57c33e2ee2fd90a733df</td>
                                                         </tr>
                                                         <tr>
                                                             <td>john_doe</td>
@@ -274,7 +274,7 @@ export function PracticePageHashEasy() {
                                                         onChange={onChange}
                                                         type="text"
                                                         name="answer1"
-                                                        placeholder={`${isAnswer1Correct ? 'CyberWeb' : 'Answer format: ********'}`}
+                                                        placeholder={`${isAnswer1Correct ? 'CyberEx' : 'Answer format: *******'}`}
                                                         disabled={isAnswer1Correct}
                                                     />
                                                 </div>
@@ -670,7 +670,7 @@ export function PracticePageHashEasy() {
                     <div style={{ position: 'fixed', right: 0, width: '50%', height: '100vh' }}>
                         <iframe
                             title="Interfaz del SO"
-                            src="http://podman:6080/vnc.html?host=podman&port=6080"
+                            src="http://cyberex:6080/vnc.html?host=cyberex&port=6080"
                             width="100%"
                             height="100%"
                             style={{ border: 'none' }}

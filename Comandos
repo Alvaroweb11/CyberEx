@@ -1,3 +1,0 @@
-sudo /opt/lampp/lampp startmysql
-
-./utils/novnc_proxy --vnc localhost:5901

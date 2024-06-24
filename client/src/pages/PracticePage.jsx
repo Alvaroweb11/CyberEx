@@ -21,7 +21,7 @@ export function PracticePage() {
                            <br>
                            <p>Puedes canjear pistas por 20 CP.</p>
                            <br>
-                           <p>(La constraseña para las máquinas es: CyberWeb)</p>`,
+                           <p>(La constraseña para las máquinas es: CyberEx)</p>`,
                     icon: 'info',
                     confirmButtonText: 'Entendido'
                 });
